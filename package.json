@@ -1,6 +1,6 @@
 {
   "name": "@caidazi/dsh-boards",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "财搭子研究看板：存储产业、AI 基建回报与 PCB/CCL 兑现跟踪，接入财搭子 MCP。",
   "type": "module",
   "license": "MIT",

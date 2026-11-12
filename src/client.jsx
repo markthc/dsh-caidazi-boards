@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from "react";
 import { boards, revenueThreshold } from "./boards.js";
 import { css } from "./style.js";
+import { logo, dafa } from "./brand.js";
 export const inject = ["slots", "connection", "uiWorkspace"];
 function BoardIcon({ size = 20 }) {
   return (
@@ -119,7 +120,7 @@ function PriceChart({ history, asset }) {
     </>
   );
 }
-function Scenario({ params, setParams }) {
+function Scenario({ params, setParams, disabled = false }) {
   const { capital, roi, margin } = params;
   const value = revenueThreshold(capital, roi, margin);
   const max = (capital * roi) / 10;
@@ -127,10 +128,10 @@ function Scenario({ params, setParams }) {
     <section className="scenario">
       <h2>需要多少收入，才能达到回报要求？</h2>
       <p className="sub">
-        假设测算 · 可修改，不代表公司预测。资本基数统一为已投产资本。
+        {disabled ? "静态测算预览 · 连接后可调整假设。" : "假设测算 · 可修改，不代表公司预测。"}资本基数统一为已投产资本。
       </p>
       <div className="layout">
-        <div>
+        <fieldset disabled={disabled}>
           <label>
             <span>已投产资本 · 亿元</span>
             <input
@@ -181,7 +182,7 @@ function Scenario({ params, setParams }) {
               }
             />
           </label>
-        </div>
+        </fieldset>
         <div>
           <p className="calculation">
             年收入门槛 <strong>{value.toFixed(1)}</strong> 亿元
@@ -298,7 +299,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
     view.params || { capital: 100, roi: 15, margin: 24 },
   );
   const board = boards.find((b) => b.id === id),
-    data = store[id];
+    data = connected ? store[id] : undefined;
   useEffect(() => {
     view.id = id;
     view.params = params;
@@ -404,10 +405,10 @@ export function BoardApp({ rpc, ask, view = {} }) {
       <style>{css}</style>
       <header className="top">
         <div className="brand">
-          <BoardIcon />
-          财搭子 · 研究看板
+          <img className="brand-logo" src={logo} alt="财搭子 Logo" />
+          财搭子 <span className="brand-title">研究看板</span>
         </div>
-        <button className="connected" onClick={() => setSettings(!settings)}>
+        <button className="connected" onClick={() => connected ? setSettings(!settings) : document.getElementById("caidazi-key")?.focus()}>
           {connected ? (
             <>
               <i />
@@ -431,14 +432,21 @@ export function BoardApp({ rpc, ask, view = {} }) {
         ))}
       </nav>
       <main>
-        {settings && (
+        {(settings || (ready && !connected)) && (
           <section className="connect">
-            <h2>{connected ? "更换财搭子连接" : "连接一次，开始跟踪"}</h2>
-            <p>
-              在财搭子 App 的 Skills 页面获取个人 API Key，粘贴后即可读取数据。
-            </p>
+            <div className="connect-heading">
+              <img src={dafa} alt="大发" width="44" height="44" />
+              <div><h2>{connected ? "更换财搭子连接" : "让大发帮你跟踪最新变化"}</h2>
+              <p>{connected ? "粘贴新的 API Key，验证后切换连接。" : "当前为静态预览。连接后，获取真实行情与研究资料。"}</p></div>
+            </div>
+            <ol className="key-steps" aria-label="在财搭子 App 获取 Key">
+              <li>打开财搭子 App <b>大发页</b></li>
+              <li>打开左侧菜单，进入 <b>我的skill</b></li>
+              <li><b>领取 API Key</b>，或在 <b>我的API KEY管理</b> 中复制</li>
+            </ol>
             <form onSubmit={connect}>
               <input
+                id="caidazi-key"
                 type="password"
                 aria-label="财搭子 API Key"
                 placeholder="粘贴 API Key"
@@ -464,7 +472,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                前往财搭子 ↗
+                还没有财搭子？前往下载 ↗
               </a>
               <span className="sub">Key 保存在 DSH 凭据区</span>
             </div>
@@ -480,7 +488,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
             <h1>{board.subtitle}</h1>
             <p>{board.description}</p>
           </div>
-          <div className="toolbar">
+          {connected && <div className="toolbar">
             <button
               className="primary"
               disabled={!ready || !connected || busy[id]}
@@ -491,7 +499,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
             <button disabled={!connected} onClick={() => followup()}>
               继续研究 ↗
             </button>
-          </div>
+          </div>}
         </div>
         {data && <Observation board={board} data={data} />}
         {errors[id] && (
@@ -508,10 +516,17 @@ export function BoardApp({ rpc, ask, view = {} }) {
             <div className="progress" />
           </div>
         )}
-        {id === "ai" && <Scenario params={params} setParams={setParams} />}
+        {id === "ai" && <Scenario params={connected ? params : { capital: 100, roi: 15, margin: 24 }} setParams={setParams} disabled={!connected} />}
         <div className="grid">
           <div>
             <section className="section">
+              {!connected ? <div className="static-preview">
+                <div className="row"><h2>这张看板跟踪什么</h2><span className="preview-label">静态预览</span></div>
+                <div className="research-chain">{board.checks.map(([title], i) => <React.Fragment key={title}><strong>{title}</strong>{i < 2 && <span aria-hidden="true">→</span>}</React.Fragment>)}</div>
+                <h3>关注公司</h3>
+                <div className="preview-companies">{[[board.symbol, board.asset], ...board.peers].map(([symbol, name]) => <div key={symbol}><b>{name}</b><span>{symbol}</span></div>)}</div>
+                <p className="preview-delivery">连接后显示公司报价、分钟价格图与近期资料；继续研究时，大发会带上当前问题和假设。</p>
+              </div> : <>
               <div className="row">
                 <h2>市场正在怎样定价</h2>
                 <span className="sub">参考公司，不代表行业指数</span>
@@ -579,8 +594,9 @@ export function BoardApp({ rpc, ask, view = {} }) {
                   ))}
                 </div>
               )}
+            </>}
             </section>
-            <section className="section">
+            {connected && <section className="section">
               <h2>
                 近期研究线索 <span className="sub">近30天</span>
               </h2>
@@ -607,7 +623,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
                       : "更新后显示有来源、日期明确的研究线索。")}
                 </p>
               )}
-            </section>
+            </section>}
           </div>
           <aside className="aside">
             <h2>判断要经过这三关</h2>
@@ -615,7 +631,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
               <section className="check" key={title}>
                 <h3>{title}</h3>
                 <p>{body}</p>
-                <button
+                {connected && <button
                   disabled={!connected}
                   onClick={() =>
                     followup(
@@ -624,7 +640,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
                   }
                 >
                   围绕这一点研究 ↗
-                </button>
+                </button>}
               </section>
             ))}
             <p className="sub" style={{ marginTop: 16 }}>

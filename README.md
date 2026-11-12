@@ -10,14 +10,14 @@
 
 ```sh
 npm install -g @deepseek-ai/dsh@0.2.2-rc.2
-dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.1.0/caidazi-dsh-boards-0.1.0.tgz
+dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.1.1/caidazi-dsh-boards-0.1.1.tgz
 dsh web
 ```
 
-也可下载 Release 中的 `.tgz`，执行 `dsh plugin --profile web add ./caidazi-dsh-boards-0.1.0.tgz`。包已预编译，安装不用执行本插件的构建脚本。
+也可下载 Release 中的 `.tgz`，执行 `dsh plugin --profile web add ./caidazi-dsh-boards-0.1.1.tgz`。包已预编译，安装不用执行本插件的构建脚本。
 
-1. 打开 DSH 左侧的 **财搭子看板**。
-2. 点击 **连接财搭子**，粘贴财搭子 App → 大发 → Skills 页面获得的 API Key。插件会实际请求行情验证，成功后保存到 DSH 凭据区。也支持宿主进程已有的 `CAIDAZI_API_KEY`。
+1. 打开 DSH 左侧的 **财搭子看板**。没有 Key 时只展示静态研究框架与不可调整的测算预览，不请求财搭子数据。
+2. 点击 **连接财搭子**，粘贴财搭子 App → 大发 → 左侧菜单 → 我的skill → 领取 API Key（已领取则进入「我的API KEY管理」复制）。插件会实际请求行情验证，成功后保存到 DSH 凭据区。也支持宿主进程已有的 `CAIDAZI_API_KEY`。
 3. 三张看板首次打开时自动加载；之后点击 **刷新数据** 更新。没有后台轮询或定时任务。
 4. **继续研究** 或单项研究入口打开 DSH 会话草稿，已带入问题与参数；检查后发送。需要 DSH 自身已配置可用的模型。回到看板保留本次页面内的数据、选项与参数；重新加载浏览器后重新读取。
 
@@ -55,4 +55,34 @@ npm pack
 
 源文件 `src/host.js` 负责原生接入及鉴权，`src/data.js` 负责三个固定工具的数据解释与权限筛选，`src/client.jsx` 为主面板。不存在单独的 Web 后端、数据库或新增框架。
 
-代码采用 MIT。数据与第三方服务遵循各自许可和账户条款。发布包不含任何用户 Key、持仓、测试响应或机构材料。
+代码采用 MIT。财搭子 Logo 和大发头像复用财搭子 Flutter 素材，品牌和商标权利仍归财搭子所有，不随代码许可转让。数据与第三方服务遵循各自许可和账户条款。发布包不含任何用户 Key、持仓、测试响应或机构材料。
+
+## 定时分析、数据刷新与监控
+
+基于 DSH 0.2.2-rc.2 的官方 Schedule / Webhook 实现：
+
+| 需求 | DSH 机制 | 此插件当前状态 |
+| --- | --- | --- |
+| 固定时间研究 | Host 保存任务，到时将指令投递到会话，由 Agent 调用模型和 MCP | 可以在原生 Automation tasks 配置；结果进入会话 |
+| 定时更新看板数据 | 需要任务将结果写入看板共用的数据存储，再让页面读取 | 尚未接入；当前是首次打开与手动刷新 |
+| 指标或事件变化立即研究 | 外部事件源 → 认证 Webhook → 规则 → 会话 | DSH 有底层机制，但财搭子事件源与适配器尚未接入 |
+
+### 现在可以怎么用
+
+在 DSH 的 Automation tasks 创建一个任务，时区设为 `Asia/Shanghai`，每个工作日 18:00，目标选择首次创建后复用同一会话（`new_once`）。任务示例：
+
+> 使用财搭子 MCP 跟踪存储行业。获取兆易创新、美光最新报价与相关公告，比较上次研究的产品价格、供给和利润兑现证据。仅在出现有原始来源的新事实或判断变化时详细报告；没有实质变化则简短说明。注明数据日期，不把重复新闻当新事件，不访问个人持仓或执行交易。
+
+这会定时生成会话研究结果，**不会自动刷新看板页面**。工作日规则不是证券交易日历，节假日仍可能有海外行情或公告。
+
+任务支持单次、间隔、每日、每周、五字段 cron、RRULE；间隔最低60秒。建立任务不调用模型，执行研究时会消耗模型和数据服务额度。Host 必须运行：关闭浏览器不影响仍在运行的 Host，退出 Host／关机则无法准时执行；恢复后遗漏周期只补最近一次。投递记录只证明指令进入会话，不代表研究完成；崩溃时可能重复投递。
+
+### 看板定时更新的最小后续改造
+
+复用现有 `loadBoard`：提供 Agent 可调用的固定看板刷新工具，成功后在 Host 保存每张板的最新快照、版本与时间；手动刷新也写入同一处。页面打开及数据变更时读取该快照，失败保留上次成功数据。Schedule 调用刷新工具后，页面与会话才能共享结果。
+
+纯行情刷新可由确定性定时程序完成，不需要每次启动模型；有事件变化或需要解释时再触发 Agent 分析。持续监控优先由财搭子云端执行，DSH 作为消费入口，避免依赖用户电脑全天开机。事件推送还需财搭子提供带认证、事件编号的数据出口；DSH Webhook runtime 本身不提供队列、重试或去重，不能直接当可靠监控服务。财搭子 MCP 现有监控列表读取能力不等于创建云任务能力。
+
+本版没有自动创建任何定时任务，也没有在页面里展示尚未落地的“自动更新”开关。
+
+官方依据：[Schedule](https://github.com/deepseek-ai/deepseek-harness/blob/main/docs/subsystems/schedule.md)、[Webhook](https://github.com/deepseek-ai/deepseek-harness/blob/main/docs/subsystems/webhook.md)。领取 Key 的步骤依据本轮读取的 Flutter Skills 页面和左侧菜单实现；具体上架版本需与 App 发布进度对齐。
