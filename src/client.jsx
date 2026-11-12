@@ -681,15 +681,8 @@ export function apply(ctx) {
   const view = {};
   const props = {
     view,
-    rpc: async (action, payload) => {
-      const r = await fetch("api/caidazi-boards", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action, payload }),
-      });
-      if (!r.ok) throw new Error("连接已失效，请重新打开 DSH");
-      return r.json();
-    },
+    rpc: (action, payload) =>
+      ctx.connection.rpc.call("/api", "caidazi-boards", { action, payload }),
     ask: (prompt) =>
       ctx.uiWorkspace.startSession(undefined, {
         prompt,

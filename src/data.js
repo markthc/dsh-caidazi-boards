@@ -40,7 +40,7 @@ export function decode(result) {
 export async function withMcp(key, run, signal) {
   if (!key) throw new DataError("auth", "请先连接财搭子");
   const client = new Client(
-    { name: "caidazi-dsh-boards", version: "0.1.2" },
+    { name: "caidazi-dsh-boards", version: "0.1.3" },
     { capabilities: {} },
   );
   const transport = new StdioClientTransport({
@@ -50,6 +50,7 @@ export async function withMcp(key, run, signal) {
       CAIDAZI_API_KEY: key,
       CAIDAZI_TIMEOUT_MS: "90000",
       CAIDAZI_MCP_NO_UPDATE_NOTIFIER: "1",
+      ...(process.versions.electron ? { ELECTRON_RUN_AS_NODE: "1" } : {}),
     },
     stderr: "pipe",
   });

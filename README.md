@@ -2,24 +2,39 @@
 
 把三个研究问题放进 DeepSeek Harness：**存储涨价能否兑现利润、AI 基建能否赚回投入、PCB／CCL 规格升级能否变成订单**。
 
-这是可安装的研究增强预览版（v0.1.2）。看板通过个人财搭子 API Key 获取行情与研究线索；继续研究时，将看板问题和情景参数带入 DSH 原生会话。
+这是可安装的研究增强预览版（v0.1.3）。看板通过个人财搭子 API Key 获取行情与研究线索；继续研究时，将看板问题和情景参数带入 DSH 原生会话。
 
 ## 安装
 
-需要 Node.js **24.9.0+**、DeepSeek Harness **0.2.2-rc.2**。已实测该版本 Web 界面；不宣称支持其他版本或 Desktop 内置通信。
+支持 DeepSeek Harness **0.2.2-rc.1 / rc.2**。命令行版需要 Node.js **24.9.0+**；官方 Desktop 使用自带运行环境。v0.1.3 修复 rc.1 缺少 MCP Manager 和 Desktop 的 Electron 子进程启动问题，不需要 `allow-version`。
+
+**Desktop：**在 Plugins 中使用下方安装包 URL 安装，完成后重启应用，打开左侧「财搭子看板」。不要把 `--profile web` 的命令当成桌面安装。
+
+```text
+https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.1.3/caidazi-dsh-boards-0.1.3.tgz
+```
+
+**Web：**
 
 ```sh
 npm install -g @deepseek-ai/dsh@0.2.2-rc.2
-dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.1.2/caidazi-dsh-boards-0.1.2.tgz
+dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.1.3/caidazi-dsh-boards-0.1.3.tgz
 dsh web
 ```
 
-也可下载 Release 中的 `.tgz`，执行 `dsh plugin --profile web add ./caidazi-dsh-boards-0.1.2.tgz`。包已预编译，安装不用执行本插件的构建脚本。
+也可下载 Release 中的 `.tgz`，执行 `dsh plugin --profile web add ./caidazi-dsh-boards-0.1.3.tgz`。包已预编译，安装不用执行本插件的构建脚本。
 
 1. 打开 DSH 左侧的 **财搭子看板**。没有 Key 时只展示截至2026-11-12的研究内容与不可调整的测算预览，不请求财搭子数据。
 2. 点击 **连接财搭子**，粘贴财搭子 App → 大发 → 左侧菜单 → 我的skill → 领取 API Key（已领取则进入「我的API KEY管理」复制）。插件会实际请求行情验证，成功后保存到 DSH 凭据区。也支持宿主进程已有的 `CAIDAZI_API_KEY`。
 3. 默认打开 **研究判断**，先读结论、财务图表和反证条件。三张看板首次打开时自动加载行情；在 **行情与线索** 点击 **刷新行情与资料** 更新接口数据。研究判断不会被行情刷新改写。没有后台轮询或定时任务。
 4. **继续研究** 或单项研究入口打开 DSH 会话草稿，已带入问题与参数；检查后发送。需要 DSH 自身已配置可用的模型。回到看板保留本次页面内的数据、选项与参数；重新加载浏览器后重新读取。
+
+## 兼容验收
+
+- rc.1 / rc.2 Web：安装启动、鉴权、Key 校验和保存、三板实际行情与历史数据通过。
+- macOS 官方 Desktop rc.1：安装、三板静态预览、连接请求与无效 Key 提示通过；同一 Electron 可执行程序下，真实 MCP 调用、33个工具注册、Key 移除/恢复和退出清理通过。
+- 8个官方 Skills 保留。rc.1 使用宿主自带 MCP Client，rc.2 有 Manager 时沿用原路径。Key 只存在于凭据服务及子进程环境，不写进插件配置。
+- 本轮没有代用户保存 Key 到 Desktop，也未验收 Windows/Linux Desktop 或模型自主研究的最终质量。
 
 ## 三张看板
 
