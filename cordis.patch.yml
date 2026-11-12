@@ -1,0 +1,3 @@
+- insert:
+    - id: caidazi-boards
+      name: '@caidazi/dsh-boards'
