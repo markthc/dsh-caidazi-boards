@@ -8,9 +8,9 @@ test('snapshot validates source IDs, schema, URLs and chart alignment',()=>{
   for(const edit of [s=>s.boards.memory.facts[0].sources=['fake'],s=>s.sources.hynix.url='javascript:alert(1)',s=>s.boards.ai.charts[0].series[0].values=[3],s=>s.boards.ai.html='<script/>',s=>s.sources.hynix.date='2026-02-31']){const s=copy();edit(s);assert.throws(()=>validateSnapshot(s))}
 });
 test('two consumers receive same immutable snapshot; corruption/offline keeps last good version',async()=>{
-  const s=copy();s.version='2026-11-12.4';s.publishedAt=new Date().toISOString();s.boards.memory.change='测试：增加供给验证维度';const body=JSON.stringify(s);
+  const s=copy();s.version='2026-11-12.99';s.publishedAt=new Date().toISOString();s.boards.memory.change='测试：增加供给验证维度';const body=JSON.stringify(s);
   let broken=false,offline=false;
-  const fetcher=async url=>{if(offline)throw new Error();return new Response(url.endsWith('latest.json')?JSON.stringify({schemaVersion:1,version:s.version,path:`snapshots/${s.version}.json`,sha256:broken?'0'.repeat(64):digest(body)}):body)};
+  const fetcher=async url=>{if(offline)throw new Error();return new Response(url.endsWith('latest-v2.json')?JSON.stringify({schemaVersion:2,version:s.version,path:`snapshots/${s.version}.json`,sha256:broken?'0'.repeat(64):digest(body)}):body)};
   const a=createPublicationReader(fetcher),b=createPublicationReader(fetcher);
   assert.equal((await a()).snapshot.version,s.version);assert.deepEqual((await a()).snapshot,(await b()).snapshot);
   broken=true;assert.equal((await a()).snapshot.boards.memory.change,s.boards.memory.change);assert.ok((await a()).warning);
@@ -32,4 +32,25 @@ test('a sourced patch becomes review-required and cannot mutate the active basel
   assert.equal(r.status,'review-required');assert.equal(r.snapshot.boards.memory.change,'增加价格观察');assert.notEqual(original.boards.memory.change,r.snapshot.boards.memory.change);
   await assert.rejects(()=>draftResearch({ctx:make(true),id:'memory',data,snapshot:original}));
   await assert.rejects(()=>draftResearch({ctx:make(false,true),id:'memory',data,snapshot:original}),/未采纳/);
+});
+
+test('policy geography rejects duplicate states, impossible counts, winners and unsafe URLs',()=>{
+  for(const edit of [
+    g=>g.states[1].code=g.states[0].code,
+    g=>g.states[0].buildings.construction=-1,
+    g=>g.states[0].buildings.planned=0.5,
+    g=>g.states.find(s=>s.code==='KS').winner={name:'Uncalled',party:'D'},
+    g=>g.states[0].url='javascript:alert(1)',
+    g=>g.states.find(s=>s.code==='CA').capacity={existing:NaN,construction:2}
+  ]){const s=copy();edit(s.boards.policy.geography);assert.throws(()=>validateSnapshot(s))}
+});
+
+test('v1 publication remains usable by the released three-board client',async()=>{
+  const {readFile}=await import('node:fs/promises');
+  const root=new URL('../research/',import.meta.url);
+  const m=JSON.parse(await readFile(new URL('latest.json',root),'utf8'));
+  const raw=await readFile(new URL(m.path,root),'utf8');
+  assert.equal(digest(raw),m.sha256);assert.equal(m.schemaVersion,1);
+  const legacy=JSON.parse(raw);assert.deepEqual(Object.keys(legacy.boards).sort(),['ai','memory','pcb']);
+  assert.equal(legacy.schemaVersion,1);assert.equal(legacy.version,m.version);
 });

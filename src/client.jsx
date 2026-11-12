@@ -1,7 +1,7 @@
-/* THESIS: Three research instruments, one calm working surface.
+/* THESIS: Four research instruments, one calm working surface.
  OWN-WORLD: Existing Caidazi white/blue system; DSH owns navigation and conversation.
  STORY: Connect once, read current evidence, change assumptions, ask a focused follow-up.
- FIRST VIEWPORT: Compact title, three text tabs; price evidence left, research conditions right.
+ FIRST VIEWPORT: Compact title, four text tabs; price evidence left, research conditions right.
  FORM: Native main panel extending the established visual system; no new app shell. */
 import React, { useState, useEffect } from "react";
 import { boards, revenueThreshold } from "./boards.js";
@@ -9,6 +9,7 @@ import { css } from "./style.js";
 import { logo, dafa } from "./brand.js";
 import { ResearchBrief } from "./research-view.jsx";
 import { research, researchDate, sources } from "./research.js";
+import { PolicyMap } from "./policy-view.jsx";
 import { MarketPanel } from "./market-view.jsx";
 export const inject = ["slots", "connection", "uiWorkspace"];
 function BoardIcon({ size = 20 }) {
@@ -391,11 +392,12 @@ export function BoardApp({ rpc, ask, view = {} }) {
           </div>}
         </div>
         <div className="content-switch" aria-label="看板内容">
-          {[["research","核心判断"],["evidence","产业证据"],["financial","经营数据"],["market","市场定价"]].map(([value,label])=><button key={value} aria-pressed={mode===value} onClick={()=>setMode(value)}>{label}</button>)}
+          {[["research","核心判断"],["evidence",id === "policy" ? "政策进展" : "产业证据"],["financial",id === "policy" ? "州级分布" : "经营数据"],["market",id === "policy" ? "关联行情" : "市场定价"]].map(([value,label])=><button key={value} aria-pressed={mode===value} onClick={()=>setMode(value)}>{label}</button>)}
         </div>
         {errors[id] && <div className="error" role="alert">{errors[id]}{data ? "，保留上次成功结果。" : ""}</div>}
         {busy[id] && <div role="status"><p className="loading-copy">正在同步已发布研究、公司行情和最新证据…</p><div className="progress" /></div>}
         {publication?.warning && <p className="publication-note" role="status">{publication.warning}</p>}
+        {mode === "financial" && id === "policy" && <PolicyMap data={editorial.geography} sources={sourceMap} />}
         {mode !== "market" && <ResearchBrief id={id} section={mode} connected={connected} ask={followup} research={editorial} sources={sourceMap} publishedAt={snapshot?.publishedAt || researchDate} version={snapshot?.version} tracks={data?.tracks} />}
         {mode === "financial" && id === "ai" && <Scenario params={connected ? params : { capital: 100, roi: 15, margin: 24 }} setParams={setParams} disabled={!connected} />}
         {mode === "market" && <MarketPanel key={id} board={board} data={data} connected={connected} />}

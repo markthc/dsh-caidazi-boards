@@ -4,7 +4,7 @@ import { validateSnapshot, digest, bundledSnapshot } from '../src/publication.js
 const [command,...args]=process.argv.slice(2);
 if(command==='draft'){
   const [id,out]=args;
-  if(!['memory','ai','pcb'].includes(id)||!out)throw new Error('Usage: draft memory|ai|pcb output.json');
+  if(!['memory','ai','pcb','policy'].includes(id)||!out)throw new Error('Usage: draft memory|ai|pcb|policy output.json');
   const base=new URL(process.env.DSH_PUBLISHER_URL||'http://127.0.0.1:8930');
   if(!['127.0.0.1','localhost'].includes(base.hostname))throw new Error('Publisher must connect to a local DSH host');
   const token=process.env.DSH_PUBLISHER_TOKEN;if(!token)throw new Error('Set DSH_PUBLISHER_TOKEN from your local DSH web login');
@@ -21,11 +21,11 @@ if(command==='draft'){
   const input=JSON.parse(await readFile(file,'utf8'));
   const s=validateSnapshot({...input.snapshot||input,version,publishedAt:new Date().toISOString()});
   const text=JSON.stringify(s,null,2)+'\n',dir=new URL('../research/',import.meta.url),path=`snapshots/${version}.json`;
-  try{const prev=JSON.parse(await readFile(new URL('latest.json',dir),'utf8'));if(version.localeCompare(prev.version,undefined,{numeric:true})<=0)throw new Error('Publication version must increase');}catch(e){if(e.code!=='ENOENT')throw e}
+  try{const prev=JSON.parse(await readFile(new URL('latest-v2.json',dir),'utf8'));if(version.localeCompare(prev.version,undefined,{numeric:true})<=0)throw new Error('Publication version must increase');}catch(e){if(e.code!=='ENOENT')throw e}
   await mkdir(new URL('snapshots/',dir),{recursive:true});
   await writeFile(new URL(path,dir),text,{flag:'wx'});
-  await writeFile(new URL('latest.json',dir),JSON.stringify({schemaVersion:1,version,path,sha256:digest(text)},null,2)+'\n');
-  console.log('Prepared research/'+path+' and latest.json. Review git diff, then commit/push to publish.');
+  await writeFile(new URL('latest-v2.json',dir),JSON.stringify({schemaVersion:2,version,path,sha256:digest(text)},null,2)+'\n');
+  console.log('Prepared research/'+path+' and latest-v2.json. Review git diff, then commit/push to publish.');
 }else if(command==='seed'){
   const [out]=args;if(!out)throw new Error('Usage: seed output.json');
   await writeFile(out,JSON.stringify(bundledSnapshot,null,2)+'\n');

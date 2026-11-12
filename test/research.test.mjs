@@ -33,3 +33,16 @@ test('all research evidence has valid dated sources and chart periods align', ()
     }
   }
 });
+
+test('policy snapshot keeps election, building and capacity scopes separate',()=>{
+  const r=research.policy,g=r.geography,tx=g.states.find(s=>s.code==='TX'),la=g.states.find(s=>s.code==='LA');
+  assert.equal(g.states.length,51);assert.equal(g.states.filter(s=>s.capacity).length,8);
+  assert.deepEqual(['operating','construction','planned'].map(k=>g.states.reduce((n,s)=>n+s.buildings[k],0)),[1426,537,2675]);
+  assert.deepEqual(tx.buildings,{operating:172,construction:116,planned:533});
+  assert.deepEqual(tx.capacity,{existing:9,construction:18});assert.equal(la.capacity.existing,null);
+  assert.equal(g.states.find(s=>s.code==='CA').capacity,null);
+  assert.equal(tx.incumbent.party,'R');assert.equal(tx.winner.party,'D');
+  for(const code of ['AK','KS']){const s=g.states.find(s=>s.code===code);assert.equal(s.status,'pending');assert.equal(s.winner,null)}
+  assert.equal(g.asOf,'2026-11-11');assert.equal(g.capacityPeriod,'2026 H1');
+  assert.deepEqual(r.charts[1].series[0].values,[4216,4306,4371]);assert.deepEqual(r.charts[1].periods,['2025','2026F','2027F']);
+});

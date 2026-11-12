@@ -41,7 +41,7 @@ export function decode(result) {
 export async function withMcp(key, run, signal) {
   if (!key) throw new DataError("auth", "请先连接财搭子");
   const client = new Client(
-    { name: "caidazi-dsh-boards", version: "0.2.0" },
+    { name: "caidazi-dsh-boards", version: "0.3.0" },
     { capabilities: {} },
   );
   const transport = new StdioClientTransport({

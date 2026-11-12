@@ -1,4 +1,4 @@
-// Source-backed fallback; the public snapshot can update this content without a plugin upgrade.
+// Source-backed fallback; public snapshots update content without a plugin upgrade.
 export const researchDate = "2026-11-12";
 export const sources = {
   "hynix": {
@@ -64,6 +64,108 @@ export const sources = {
     "date": "2026-11-11",
     "url": "https://www.jwview.com/jingwei/html/11-11/696593.shtml",
     "locator": "已核对中新经纬转载蓝鲸新闻原文；DRAM续创新高段，转引DRAMeXchange。原文未明确DDR代际，不能外推DDR5或HBM。"
+  },
+  "cleanview": {
+    "title": "Cleanview · 美国楼栋阶段",
+    "date": "2026-11-11",
+    "url": "https://www.cleanview.co/data-centers/us",
+    "locator": "全国州表：1,426已投运／537在建／2,675规划；楼栋而非园区或MW。11/12读取。"
+  },
+  "cleanview-old": {
+    "title": "Cleanview · 11月4日留存快照",
+    "date": "2026-11-04",
+    "url": "https://www.cleanview.co/data-centers/us",
+    "locator": "旧版来源留存：1,418／564／2,555栋；现链接已更新。两期差异可能含样本及分类调整，不直接归因于项目开停工。"
+  },
+  "elections": {
+    "title": "ABC / AP · 州长选举结果",
+    "date": "2026-11-12",
+    "url": "https://abcnews.com/Elections/2026-us-governor-election-results-live-map/",
+    "locator": "36场选举内嵌AP数据：34已判、AK/KS未判；按winner标志，不按领先自行判定。媒体判定非官方认证。"
+  },
+  "governors": {
+    "title": "NGA · 现任州长",
+    "date": "2026-11-05",
+    "url": "https://www.nga.org/Governors/",
+    "locator": "沿用11/5已核现任信息；本轮主站连接失败，未改核验日期。非竞选州用现任，DC无州长。"
+  },
+  "jll": {
+    "title": "JLL · 北美数据中心 2026H1",
+    "date": "2026-08-11",
+    "url": "https://www.jll.com/en-us/newsroom/data-center-demand-exceeds-expectations-in-h1-2026",
+    "locator": "市场容量图（整数GW约数），8个单州和2个跨州区域；TX正文合计26GW。11/12复核，非11月新统计。"
+  },
+  "jll-chart": {
+    "title": "JLL · 在运与在建容量图",
+    "date": "2026-08-10",
+    "url": "https://public.flourish.studio/visualisation/29927476/",
+    "locator": "公开嵌入图底表：Texas 9/18、Virginia 9/4、Ohio 4/3、Louisiana空/7、Georgia3/4、Arizona2/2、Indiana1/3、Wyoming1/3（GW）。"
+  },
+  "congress2026": {
+    "title": "AP / MPR · 国会选举结果",
+    "date": "2026-11-04",
+    "url": "https://www.mprnews.org/story/2026/11/04/democrats-win-the-us-house-and-take-unified-control-of-congress",
+    "locator": "民主党赢得众院与参院控制权的选举报道；胜选不等于新国会已就任。"
+  },
+  "s4214": {
+    "title": "GovInfo · S.4214 状态",
+    "date": "2026-03-25",
+    "url": "https://www.govinfo.gov/bulkdata/BILLSTATUS/119/s/BILLSTATUS-119s4214.xml",
+    "locator": "11/12读取；最新行动仍是3/25两读后转商务、科学和运输委员会；未成为全国禁令。"
+  },
+  "ratepayer": {
+    "title": "Husted · 电费保护法案进展",
+    "date": "2026-09-17",
+    "url": "https://www.husted.senate.gov/media/press-releases/husted-bill-to-protect-americans-from-footing-the-bill-for-new-data-centers-blocked-from-passage/",
+    "locator": "9/16众院417–3通过；9/17参院一致同意程序受阻。本条仅说明该已核动作，不推定11月最终状态。"
+  },
+  "eia-survey": {
+    "title": "EIA · 数据中心用能调查回函",
+    "date": "2026-04-09",
+    "url": "https://www.warren.senate.gov/imo/media/doc/sen_elizabeth_warren_-_eia.pdf",
+    "locator": "正式回函：调查开发、PRA程序与自愿试点；不等于全国强制调查已经实施。"
+  },
+  "warren-hawley": {
+    "title": "Warren / Hawley · 用能透明度",
+    "date": "2026-04-15",
+    "url": "https://www.warren.senate.gov/newsroom/press-releases/warren-hawley-secure-mandatory-energy-use-reporting-requirements-for-data-centers/",
+    "locator": "民主党Warren与共和党Hawley共同推动，结合EIA正式回函理解实施阶段。"
+  },
+  "steo": {
+    "title": "EIA · 11月短期能源展望",
+    "date": "2026-11-10",
+    "url": "https://www.eia.gov/outlooks/steo/pdf/steo_full.pdf",
+    "locator": "Table 7a；模型截止11/5；2026/2027为预测。总用电量4,216/4,306/4,371 TWh；居民电价17.24/18.17/18.68美分/kWh。动态链接以后可能换版。"
+  },
+  "local-news": {
+    "title": "澎湃 · 地方数据中心限制",
+    "date": "2026-11-11",
+    "url": "https://www.thepaper.cn/newsDetail_forward_34453611",
+    "locator": "地方案例转述：Oakland延长、Brownsville 90天、San Marcos禁新建；非全州禁令。报道中未拆口径的全国400项未采用。"
+  },
+  "doe-load": {
+    "title": "DOE / LBNL · 数据中心用电研究",
+    "date": "2024-12-20",
+    "url": "https://www.energy.gov/articles/doe-releases-new-report-evaluating-increase-electricity-demand-data-centers",
+    "locator": "2023年176 TWh实绩估计，2028年325–580 TWh预测区间；保留原报告版本，不改写为最新预测。"
+  },
+  "trump-eo": {
+    "title": "白宫 · EO14318",
+    "date": "2025-07-23",
+    "url": "https://www.whitehouse.gov/presidential-actions/2025/07/accelerating-federal-permitting-of-data-center-infrastructure/",
+    "locator": "加速联邦数据中心基础设施许可；FAST-41、环境审查、联邦土地与融资支持；不是所有项目自动获批。"
+  },
+  "oakland": {
+    "title": "Oakland · 暂停延期条例",
+    "date": "2026-11-10",
+    "url": "https://oakland.legistar1.com/oakland/attachments/a4d83bd8-7902-494e-a4bb-93142612a96f.pdf",
+    "locator": "27-0178；第2、4、11节：现有暂停至11/20，随后衔接至2027-10-05；如提前通过新规则可提前结束。"
+  },
+  "oakland-vote": {
+    "title": "Oakland · 官方会议结果",
+    "date": "2026-11-10",
+    "url": "https://webapi.legistar.com/v1/oakland/events/9609/eventitems?AgendaNote=1&MinutesNote=1&Attachments=1",
+    "locator": "27-0178：Approved for Final Passage，Passed，8票同意；会议纪要当前标DRAFT。"
   }
 };
 export const research = {
@@ -592,5 +694,1320 @@ export const research = {
         ]
       }
     ]
+  },
+  "policy": {
+    "headline": "先改变成本归属与项目筛选，再看建设总量是否收缩",
+    "summary": "民主党赢得国会两院、德州与佐治亚州长选举，增加政策调整预期；新任尚未就任，不能直接推出全国停建。两党的交集是居民电费保护与用能透明度。对投资更有区分度的，是项目是否拿到供电、地方许可，以及能否把新增成本传给客户。",
+    "change": "楼栋阶段更新至11月11日；补11月EIA用电与电价展望，重核州长胜选标记与联邦提案阶段。JLL容量仍为2026H1原口径。",
+    "facts": [
+      {
+        "label": "美国数据中心在建楼栋",
+        "value": "537 栋",
+        "detail": "Cleanview 11/11追踪；另有1,426栋已投运、2,675栋规划。规划不等于开工，楼栋不等于MW。",
+        "sources": [
+          "cleanview"
+        ]
+      },
+      {
+        "label": "德州在建市场容量",
+        "value": "约 18 GW",
+        "detail": "JLL 2026H1；在运约9GW。不是11月实时值，也不是全德州IT容量普查。",
+        "sources": [
+          "jll",
+          "jll-chart"
+        ]
+      },
+      {
+        "label": "2026年全美居民零售电价预测",
+        "value": "18.17 美分/kWh",
+        "detail": "EIA 11月展望；2025年17.24。居民价格体现民生约束，不是数据中心合同电价。",
+        "sources": [
+          "steo"
+        ]
+      }
+    ],
+    "dimensions": [
+      {
+        "title": "民主党 · 国会与州长选举",
+        "signal": "胜选改变议程，不立即改变生效规则",
+        "body": "AP报道民主党赢得国会两院。ABC/AP判定Gina Hinojosa赢得德州、Keisha Bottoms赢得佐治亚；现任仍分别是Greg Abbott与Brian Kemp。立法、行政权限和地方分区审批必须分别看。",
+        "watch": "新任就职后的正式法案、行政命令与实施细则；竞选表态不当作现行禁令。",
+        "sources": [
+          "congress2026",
+          "elections",
+          "governors"
+        ]
+      },
+      {
+        "title": "共和党 · 联邦许可加速",
+        "signal": "行政加速已发布，项目仍要逐项获批",
+        "body": "特朗普于2025-07-23发布EO14318，推动联邦环境审查、FAST-41、合格项目融资与适当联邦土地利用。联邦加速不能代替州、市县审批，更不能代替实际可交付电力。",
+        "watch": "各机构具体执行、项目资格、环境审查与地方审批是否形成真实交付。",
+        "sources": [
+          "trump-eo"
+        ]
+      },
+      {
+        "title": "跨党派 · 电费由谁承担",
+        "signal": "保护居民是共识，路径仍有争议",
+        "body": "Husted新闻稿记录：Ratepayer Protection Act于9/16获众院417–3通过，9/17参院一致同意程序受阻。这是已核的程序节点，不能写成全国规则已生效。",
+        "watch": "后续参院动作、最终文本与生效条件；是否要求数据中心承担专用供电和输配电成本。",
+        "sources": [
+          "ratepayer"
+        ]
+      },
+      {
+        "title": "跨党派 · 用能披露",
+        "signal": "Warren＋Hawley推动，调查仍需实施程序",
+        "body": "民主党Warren与共和党Hawley共同要求数据中心用能透明度。EIA正式回函谈调查开发、PRA公众意见程序及自愿试点，不能把议员新闻稿标题当成全国强制调查已经运行。",
+        "watch": "正式调查表、覆盖门槛、OMB批准及首次公开数据。",
+        "sources": [
+          "warren-hawley",
+          "eia-survey"
+        ]
+      },
+      {
+        "title": "暂停建设 · 联邦提案与地方条例",
+        "signal": "全国提案未通过，Oakland地方延期已通过",
+        "body": "S.4214由独立派Sanders提出，最新行动仍为3/25转委员会。Oakland于11/10以8票通过延期条例：11/20后衔接延长至2027-10-05，如提前通过新规则可提前结束。地方通过不能外推为全州或全国停建。",
+        "watch": "适用定义、管辖边界、已有项目处置与新规则出台；会议纪要当前标DRAFT，法案状态为Passed。",
+        "sources": [
+          "s4214",
+          "oakland",
+          "oakland-vote"
+        ]
+      }
+    ],
+    "logic": [
+      {
+        "title": "把政策风险拆成四个可核对的问题",
+        "kind": "研究判断",
+        "body": "项目在哪个市县？谁批准土地用途？供电协议是否已签且有可交付日期？专用线路、备用电源和保障成本由谁付？同一州内，这四项的差异通常比单纯红蓝标签更有解释力。",
+        "sources": [
+          "ratepayer",
+          "local-news"
+        ]
+      },
+      {
+        "title": "有电、有许可不自动等于高回报",
+        "kind": "传导逻辑",
+        "body": "供电稀缺可能提高已交付容量的价值，但额外电力成本、租户信用和合同转嫁条款决定运营商能否留住利润。供配电、热管理订单也要核对验收与回款，不能直接从政策讨论推出公司受益。",
+        "sources": [
+          "jll",
+          "steo"
+        ]
+      },
+      {
+        "title": "在建栋数下降，不能直接归因于禁令",
+        "kind": "口径约束",
+        "body": "Cleanview两期记录从564变为537栋在建、1,418变为1,426栋投运、2,555变为2,675栋规划。样本补录与分类修订都可能改变总量；缺少逐项目迁移记录，不把净差额写成取消或转投运数量。",
+        "sources": [
+          "cleanview",
+          "cleanview-old"
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "title": "美国数据中心楼栋阶段 · 两次公开快照",
+        "unit": "栋 · Cleanview追踪样本",
+        "periods": [
+          "11月4日",
+          "11月11日"
+        ],
+        "series": [
+          {
+            "name": "已投运",
+            "values": [
+              1418,
+              1426
+            ]
+          },
+          {
+            "name": "在建",
+            "values": [
+              564,
+              537
+            ]
+          },
+          {
+            "name": "规划",
+            "values": [
+              2555,
+              2675
+            ]
+          }
+        ],
+        "note": "2026年。横向比较的是快照状态；样本和分类可变，不将差额视为逐项目开工、停工或投运。",
+        "sources": [
+          "cleanview-old",
+          "cleanview"
+        ]
+      },
+      {
+        "title": "美国总用电量 · EIA 11月展望",
+        "unit": "TWh／年 · 全美所有用电",
+        "periods": [
+          "2025",
+          "2026F",
+          "2027F"
+        ],
+        "series": [
+          {
+            "name": "总用电量",
+            "values": [
+              4216,
+              4306,
+              4371
+            ]
+          }
+        ],
+        "note": "F为预测，模型截止2026-11-05。不是数据中心单独用电量，也不是发电量。",
+        "sources": [
+          "steo"
+        ]
+      },
+      {
+        "title": "美国居民零售电价 · EIA 11月展望",
+        "unit": "美分／kWh · 全美居民平均",
+        "periods": [
+          "2025",
+          "2026F",
+          "2027F"
+        ],
+        "series": [
+          {
+            "name": "居民电价",
+            "values": [
+              17.24,
+              18.17,
+              18.68
+            ]
+          }
+        ],
+        "note": "F为预测。居民价格用于观察成本压力，不能代替工业电价或数据中心PPA合同价格。",
+        "sources": [
+          "steo"
+        ]
+      }
+    ],
+    "reassess": "若形成全国或主要州已生效、明确覆盖在建项目的暂停规则，应下调交付预期；若专用供电与成本承担机制落地、许可和通电时点改善，应上调具备这些条件的项目可交付性。两者都需要正式文件与逐项目证据。",
+    "watch": [
+      "德州新任就职后，竞选中的暂停主张是否变成有明确范围与豁免的正式规则。",
+      "电费保护与用能调查的后续法定程序，不把新闻稿标题当成实施状态。",
+      "重点项目供电协议、建设许可与实际通电；用同一项目的前后状态验证交付变化。"
+    ],
+    "geography": {
+      "asOf": "2026-11-11",
+      "electionAsOf": "2026-11-12",
+      "incumbentAsOf": "2026-11-05",
+      "capacityPeriod": "2026 H1",
+      "states": [
+        {
+          "code": "AL",
+          "name": "Alabama",
+          "nameZh": "阿拉巴马",
+          "incumbent": {
+            "name": "Kay Ivey",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Thomas Tuberville",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-10",
+          "buildings": {
+            "operating": 13,
+            "construction": 9,
+            "planned": 14
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/alabama"
+        },
+        {
+          "code": "AK",
+          "name": "Alaska",
+          "nameZh": "阿拉斯加",
+          "incumbent": {
+            "name": "Mike Dunleavy",
+            "party": "R"
+          },
+          "winner": null,
+          "status": "pending",
+          "reportedAt": "2026-11-12",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 1
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/alaska"
+        },
+        {
+          "code": "AZ",
+          "name": "Arizona",
+          "nameZh": "亚利桑那",
+          "incumbent": {
+            "name": "Katie Hobbs",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Katie Hobbs",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 80,
+            "construction": 27,
+            "planned": 101
+          },
+          "capacity": {
+            "existing": 2,
+            "construction": 2
+          },
+          "url": "https://cleanview.co/data-centers/arizona"
+        },
+        {
+          "code": "AR",
+          "name": "Arkansas",
+          "nameZh": "阿肯色",
+          "incumbent": {
+            "name": "Sarah Huckabee Sanders",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Sarah Huckabee Sanders",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-09",
+          "buildings": {
+            "operating": 1,
+            "construction": 2,
+            "planned": 11
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/arkansas"
+        },
+        {
+          "code": "CA",
+          "name": "California",
+          "nameZh": "加利福尼亚",
+          "incumbent": {
+            "name": "Gavin Newsom",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Xavier Becerra",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 73,
+            "construction": 7,
+            "planned": 34
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/california"
+        },
+        {
+          "code": "CO",
+          "name": "Colorado",
+          "nameZh": "科罗拉多",
+          "incumbent": {
+            "name": "Jared Polis",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Phil Weiser",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 14,
+            "construction": 4,
+            "planned": 23
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/colorado"
+        },
+        {
+          "code": "CT",
+          "name": "Connecticut",
+          "nameZh": "康涅狄格",
+          "incumbent": {
+            "name": "Ned Lamont",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Ned Lamont",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-10",
+          "buildings": {
+            "operating": 2,
+            "construction": 0,
+            "planned": 5
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/connecticut"
+        },
+        {
+          "code": "DE",
+          "name": "Delaware",
+          "nameZh": "特拉华",
+          "incumbent": {
+            "name": "Matt Meyer",
+            "party": "D"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 0
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/delaware"
+        },
+        {
+          "code": "DC",
+          "name": "District of Columbia",
+          "nameZh": "哥伦比亚特区",
+          "incumbent": null,
+          "winner": null,
+          "status": "not-applicable",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 0
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/washington-dc"
+        },
+        {
+          "code": "FL",
+          "name": "Florida",
+          "nameZh": "佛罗里达",
+          "incumbent": {
+            "name": "Ron DeSantis",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Byron Donalds",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-10",
+          "buildings": {
+            "operating": 13,
+            "construction": 2,
+            "planned": 10
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/florida"
+        },
+        {
+          "code": "GA",
+          "name": "Georgia",
+          "nameZh": "佐治亚",
+          "incumbent": {
+            "name": "Brian Kemp",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Keisha Bottoms",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-10",
+          "buildings": {
+            "operating": 50,
+            "construction": 34,
+            "planned": 168
+          },
+          "capacity": {
+            "existing": 3,
+            "construction": 4
+          },
+          "url": "https://cleanview.co/data-centers/georgia"
+        },
+        {
+          "code": "HI",
+          "name": "Hawaii",
+          "nameZh": "夏威夷",
+          "incumbent": {
+            "name": "Josh Green",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Josh Green",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 0
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/hawaii"
+        },
+        {
+          "code": "ID",
+          "name": "Idaho",
+          "nameZh": "爱达荷",
+          "incumbent": {
+            "name": "Brad Little",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Brad Little",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 2,
+            "construction": 2,
+            "planned": 5
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/idaho"
+        },
+        {
+          "code": "IL",
+          "name": "Illinois",
+          "nameZh": "伊利诺伊",
+          "incumbent": {
+            "name": "JB Pritzker",
+            "party": "D"
+          },
+          "winner": {
+            "name": "JB Pritzker",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 49,
+            "construction": 12,
+            "planned": 98
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/illinois"
+        },
+        {
+          "code": "IN",
+          "name": "Indiana",
+          "nameZh": "印第安纳",
+          "incumbent": {
+            "name": "Mike Braun",
+            "party": "R"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 23,
+            "construction": 6,
+            "planned": 129
+          },
+          "capacity": {
+            "existing": 1,
+            "construction": 3
+          },
+          "url": "https://cleanview.co/data-centers/indiana"
+        },
+        {
+          "code": "IA",
+          "name": "Iowa",
+          "nameZh": "艾奥瓦",
+          "incumbent": {
+            "name": "Kim Reynolds",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Rob Sand",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 51,
+            "construction": 15,
+            "planned": 31
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/iowa"
+        },
+        {
+          "code": "KS",
+          "name": "Kansas",
+          "nameZh": "堪萨斯",
+          "incumbent": {
+            "name": "Laura Kelly",
+            "party": "D"
+          },
+          "winner": null,
+          "status": "pending",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 3,
+            "construction": 0,
+            "planned": 23
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/kansas"
+        },
+        {
+          "code": "KY",
+          "name": "Kentucky",
+          "nameZh": "肯塔基",
+          "incumbent": {
+            "name": "Andy Beshear",
+            "party": "D"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 3,
+            "construction": 0,
+            "planned": 28
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/kentucky"
+        },
+        {
+          "code": "LA",
+          "name": "Louisiana",
+          "nameZh": "路易斯安那",
+          "incumbent": {
+            "name": "Jeff Landry",
+            "party": "R"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 1,
+            "construction": 10,
+            "planned": 31
+          },
+          "capacity": {
+            "existing": null,
+            "construction": 7
+          },
+          "url": "https://cleanview.co/data-centers/louisiana"
+        },
+        {
+          "code": "ME",
+          "name": "Maine",
+          "nameZh": "缅因",
+          "incumbent": {
+            "name": "Janet Mills",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Hannah Pingree",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-09",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 3
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/maine"
+        },
+        {
+          "code": "MD",
+          "name": "Maryland",
+          "nameZh": "马里兰",
+          "incumbent": {
+            "name": "Wes Moore",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Wes Moore",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-10",
+          "buildings": {
+            "operating": 6,
+            "construction": 8,
+            "planned": 10
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/maryland"
+        },
+        {
+          "code": "MA",
+          "name": "Massachusetts",
+          "nameZh": "马萨诸塞",
+          "incumbent": {
+            "name": "Maura Healey",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Maura Healey",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 8,
+            "construction": 0,
+            "planned": 3
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/massachusetts"
+        },
+        {
+          "code": "MI",
+          "name": "Michigan",
+          "nameZh": "密歇根",
+          "incumbent": {
+            "name": "Gretchen Whitmer",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Jocelyn Benson",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 3,
+            "construction": 3,
+            "planned": 14
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/michigan"
+        },
+        {
+          "code": "MN",
+          "name": "Minnesota",
+          "nameZh": "明尼苏达",
+          "incumbent": {
+            "name": "Tim Walz",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Amy Klobuchar",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-08",
+          "buildings": {
+            "operating": 16,
+            "construction": 0,
+            "planned": 37
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/minnesota"
+        },
+        {
+          "code": "MS",
+          "name": "Mississippi",
+          "nameZh": "密西西比",
+          "incumbent": {
+            "name": "Tate Reeves",
+            "party": "R"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 9,
+            "construction": 9,
+            "planned": 22
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/mississippi"
+        },
+        {
+          "code": "MO",
+          "name": "Missouri",
+          "nameZh": "密苏里",
+          "incumbent": {
+            "name": "Mike Kehoe",
+            "party": "R"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 9,
+            "construction": 12,
+            "planned": 71
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/missouri"
+        },
+        {
+          "code": "MT",
+          "name": "Montana",
+          "nameZh": "蒙大拿",
+          "incumbent": {
+            "name": "Greg Gianforte",
+            "party": "R"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 2
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/montana"
+        },
+        {
+          "code": "NE",
+          "name": "Nebraska",
+          "nameZh": "内布拉斯加",
+          "incumbent": {
+            "name": "Jim Pillen",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Jim Pillen",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 19,
+            "construction": 3,
+            "planned": 8
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/nebraska"
+        },
+        {
+          "code": "NV",
+          "name": "Nevada",
+          "nameZh": "内华达",
+          "incumbent": {
+            "name": "Joe Lombardo",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Aaron Ford",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-12",
+          "buildings": {
+            "operating": 38,
+            "construction": 16,
+            "planned": 27
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/nevada"
+        },
+        {
+          "code": "NH",
+          "name": "New Hampshire",
+          "nameZh": "新罕布什尔",
+          "incumbent": {
+            "name": "Kelly Ayotte",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Kelly Ayotte",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 0
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/new-hampshire"
+        },
+        {
+          "code": "NJ",
+          "name": "New Jersey",
+          "nameZh": "新泽西",
+          "incumbent": {
+            "name": "Mikie Sherrill",
+            "party": "D"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 21,
+            "construction": 3,
+            "planned": 7
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/new-jersey"
+        },
+        {
+          "code": "NM",
+          "name": "New Mexico",
+          "nameZh": "新墨西哥",
+          "incumbent": {
+            "name": "Michelle Lujan Grisham",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Deb Haaland",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 10,
+            "construction": 5,
+            "planned": 6
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/new-mexico"
+        },
+        {
+          "code": "NY",
+          "name": "New York",
+          "nameZh": "纽约",
+          "incumbent": {
+            "name": "Kathy Hochul",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Kathy Hochul",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 16,
+            "construction": 2,
+            "planned": 30
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/new-york"
+        },
+        {
+          "code": "NC",
+          "name": "North Carolina",
+          "nameZh": "北卡罗来纳",
+          "incumbent": {
+            "name": "Josh Stein",
+            "party": "D"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 18,
+            "construction": 12,
+            "planned": 59
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/north-carolina"
+        },
+        {
+          "code": "ND",
+          "name": "North Dakota",
+          "nameZh": "北达科他",
+          "incumbent": {
+            "name": "Kelly Armstrong",
+            "party": "R"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 4,
+            "construction": 4,
+            "planned": 3
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/north-dakota"
+        },
+        {
+          "code": "OH",
+          "name": "Ohio",
+          "nameZh": "俄亥俄",
+          "incumbent": {
+            "name": "Mike DeWine",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Amy Acton",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 82,
+            "construction": 48,
+            "planned": 148
+          },
+          "capacity": {
+            "existing": 4,
+            "construction": 3
+          },
+          "url": "https://cleanview.co/data-centers/ohio"
+        },
+        {
+          "code": "OK",
+          "name": "Oklahoma",
+          "nameZh": "俄克拉何马",
+          "incumbent": {
+            "name": "Kevin Stitt",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Mike Mazzei",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 13,
+            "construction": 4,
+            "planned": 68
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/oklahoma"
+        },
+        {
+          "code": "OR",
+          "name": "Oregon",
+          "nameZh": "俄勒冈",
+          "incumbent": {
+            "name": "Tina Kotek",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Tina Kotek",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-10",
+          "buildings": {
+            "operating": 100,
+            "construction": 9,
+            "planned": 33
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/oregon"
+        },
+        {
+          "code": "PA",
+          "name": "Pennsylvania",
+          "nameZh": "宾夕法尼亚",
+          "incumbent": {
+            "name": "Josh Shapiro",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Josh Shapiro",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 16,
+            "construction": 9,
+            "planned": 276
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/pennsylvania"
+        },
+        {
+          "code": "RI",
+          "name": "Rhode Island",
+          "nameZh": "罗得岛",
+          "incumbent": {
+            "name": "Dan McKee",
+            "party": "D"
+          },
+          "winner": {
+            "name": "Helena Foulkes",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 0
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/rhode-island"
+        },
+        {
+          "code": "SC",
+          "name": "South Carolina",
+          "nameZh": "南卡罗来纳",
+          "incumbent": {
+            "name": "Henry McMaster",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Alan Wilson",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 13,
+            "construction": 10,
+            "planned": 22
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/south-carolina"
+        },
+        {
+          "code": "SD",
+          "name": "South Dakota",
+          "nameZh": "南达科他",
+          "incumbent": {
+            "name": "Larry Rhoden",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Larry Rhoden",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-06",
+          "buildings": {
+            "operating": 2,
+            "construction": 0,
+            "planned": 2
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/south-dakota"
+        },
+        {
+          "code": "TN",
+          "name": "Tennessee",
+          "nameZh": "田纳西",
+          "incumbent": {
+            "name": "Bill Lee",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Marsha Blackburn",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-06",
+          "buildings": {
+            "operating": 20,
+            "construction": 2,
+            "planned": 9
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/tennessee"
+        },
+        {
+          "code": "TX",
+          "name": "Texas",
+          "nameZh": "得克萨斯",
+          "incumbent": {
+            "name": "Greg Abbott",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Gina Hinojosa",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-10",
+          "buildings": {
+            "operating": 172,
+            "construction": 116,
+            "planned": 533
+          },
+          "capacity": {
+            "existing": 9,
+            "construction": 18
+          },
+          "url": "https://cleanview.co/data-centers/texas"
+        },
+        {
+          "code": "UT",
+          "name": "Utah",
+          "nameZh": "犹他",
+          "incumbent": {
+            "name": "Spencer Cox",
+            "party": "R"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 35,
+            "construction": 5,
+            "planned": 103
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/utah"
+        },
+        {
+          "code": "VT",
+          "name": "Vermont",
+          "nameZh": "佛蒙特",
+          "incumbent": {
+            "name": "Phil Scott",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Phil Scott",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-10",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 0
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/vermont"
+        },
+        {
+          "code": "VA",
+          "name": "Virginia",
+          "nameZh": "弗吉尼亚",
+          "incumbent": {
+            "name": "Abigail Spanberger",
+            "party": "D"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 358,
+            "construction": 109,
+            "planned": 386
+          },
+          "capacity": {
+            "existing": 9,
+            "construction": 4
+          },
+          "url": "https://cleanview.co/data-centers/virginia"
+        },
+        {
+          "code": "WA",
+          "name": "Washington",
+          "nameZh": "华盛顿",
+          "incumbent": {
+            "name": "Bob Ferguson",
+            "party": "D"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 42,
+            "construction": 2,
+            "planned": 18
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/washington"
+        },
+        {
+          "code": "WV",
+          "name": "West Virginia",
+          "nameZh": "西弗吉尼亚",
+          "incumbent": {
+            "name": "Patrick Morrisey",
+            "party": "R"
+          },
+          "winner": null,
+          "status": "not-contested",
+          "reportedAt": "2026-11-05",
+          "buildings": {
+            "operating": 0,
+            "construction": 0,
+            "planned": 32
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/west-virginia"
+        },
+        {
+          "code": "WI",
+          "name": "Wisconsin",
+          "nameZh": "威斯康星",
+          "incumbent": {
+            "name": "Tony Evers",
+            "party": "D"
+          },
+          "winner": {
+            "name": "David Crowley",
+            "party": "D"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-11",
+          "buildings": {
+            "operating": 4,
+            "construction": 10,
+            "planned": 16
+          },
+          "capacity": null,
+          "url": "https://cleanview.co/data-centers/wisconsin"
+        },
+        {
+          "code": "WY",
+          "name": "Wyoming",
+          "nameZh": "怀俄明",
+          "incumbent": {
+            "name": "Mark Gordon",
+            "party": "R"
+          },
+          "winner": {
+            "name": "Eric Barlow",
+            "party": "R"
+          },
+          "status": "called",
+          "reportedAt": "2026-11-10",
+          "buildings": {
+            "operating": 14,
+            "construction": 6,
+            "planned": 15
+          },
+          "capacity": {
+            "existing": 1,
+            "construction": 3
+          },
+          "url": "https://cleanview.co/data-centers/wyoming"
+        }
+      ],
+      "sources": [
+        "cleanview",
+        "elections",
+        "governors",
+        "jll"
+      ],
+      "notes": [
+        "州色表示2026已判当选州长；非竞选州用现任。媒体判定不等于官方认证或已就任；AK、KS仍未判定。州长党派不代表州议会控制或项目审批态度。",
+        "楼栋数来自Cleanview 2026-11-11同一全国表，涵盖AI、云、企业及加密挖矿；不是全量普查。六个零值州/特区是来源尚未收录，不代表现实中没有数据中心。",
+        "容量来自JLL 2026H1所列8州，按整数GW约数展示；未明确IT/设施功率。未列州保留空值，不用部分园区数据补总量。跨州区域不拆分。",
+        "TX图中9+18=27 GW；JLL同日报告合计26 GW。来源舍入差异保留，不倒算修正。楼栋数、市场容量、接网申请和发电队列不能相加。"
+      ]
+    }
   }
 };
