@@ -7,6 +7,8 @@ import React, { useState, useEffect } from "react";
 import { boards, revenueThreshold } from "./boards.js";
 import { css } from "./style.js";
 import { logo, dafa } from "./brand.js";
+import { ResearchBrief } from "./research-view.jsx";
+import { research, researchDate } from "./research.js";
 export const inject = ["slots", "connection", "uiWorkspace"];
 function BoardIcon({ size = 20 }) {
   return (
@@ -128,7 +130,7 @@ function Scenario({ params, setParams, disabled = false }) {
     <section className="scenario">
       <h2>需要多少收入，才能达到回报要求？</h2>
       <p className="sub">
-        {disabled ? "静态测算预览 · 连接后可调整假设。" : "假设测算 · 可修改，不代表公司预测。"}资本基数统一为已投产资本。
+        {disabled ? "静态测算预览 · 连接后可调整假设。" : "假设测算 · 可修改，不代表公司预测。"}以净利润／已投产资本为静态目标，不含建设期、杠杆及追加投入，不是项目 IRR。
       </p>
       <div className="layout">
         <fieldset disabled={disabled}>
@@ -154,10 +156,10 @@ function Scenario({ params, setParams, disabled = false }) {
           </label>
           <label>
             <span>
-              资本回报要求<output>{roi}%</output>
+              净利润 / 投产资本目标<output>{roi}%</output>
             </span>
             <input
-              aria-label="资本回报要求"
+              aria-label="净利润与投产资本目标比率"
               type="range"
               min="5"
               max="25"
@@ -284,6 +286,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
   view.pending ??= {};
   view.errors ??= {};
   const [id, setId] = useState(view.id || "memory"),
+    [mode, setMode] = useState(view.mode || "research"),
     [connected, setConnected] = useState(false),
     [ready, setReady] = useState(false),
     [settings, setSettings] = useState(false),
@@ -303,7 +306,8 @@ export function BoardApp({ rpc, ask, view = {} }) {
   useEffect(() => {
     view.id = id;
     view.params = params;
-  }, [id, store, params]);
+    view.mode = mode;
+  }, [id, store, params, mode]);
   useEffect(() => {
     if (!ready || !connected) return;
     setStore({ ...view.store });
@@ -393,10 +397,12 @@ export function BoardApp({ rpc, ask, view = {} }) {
   }
   function followup(question = board.question) {
     let prompt = `使用财搭子 Skills 和已连接的财搭子 MCP，继续「${board.title}」研究。\n${question}\n只读研究，不创建定时任务、不修改自选或持仓。写清数据时点、原始来源、事实与假设；缺少证据不判定通过。`;
+    const editorial = research[id];
+    prompt += `\n看板研究版本：${researchDate}（静态研究，不是最新工具结果）。当前判断：${editorial.headline}。重评条件：${editorial.reassess}请先核对是否出现更新，不能将上述判断当作已验证结论。`;
     if (data)
-      prompt += `\n用户已查看的看板获取时间：${data.requestedAt}。参考标的：${board.symbol}。请重新核对最新数据。`;
+      prompt += `\n用户已查看的看板获取时间：${data.requestedAt}。参考标的：${[board.symbol, ...board.peers.map(p => p[0])].join("、")}。请重新核对最新数据。`;
     if (id === "ai")
-      prompt += `\n用户情景假设（非公司实绩）：投产资本${params.capital}亿元，回报要求${params.roi}%，净利率${params.margin}%，收入门槛${revenueThreshold(params.capital, params.roi, params.margin).toFixed(1)}亿元/年。`;
+      prompt += `\n用户情景假设（非公司实绩）：投产资本${params.capital}亿元，净利润／投产资本目标${params.roi}%，净利率${params.margin}%，收入门槛${revenueThreshold(params.capital, params.roi, params.margin).toFixed(1)}亿元/年。`;
     ask(prompt);
   }
   const quote = data?.quote?.ok ? data.quote.value : null;
@@ -489,19 +495,24 @@ export function BoardApp({ rpc, ask, view = {} }) {
             <p>{board.description}</p>
           </div>
           {connected && <div className="toolbar">
-            <button
+            {mode === "market" && <button
               className="primary"
               disabled={!ready || !connected || busy[id]}
               onClick={() => refresh()}
             >
-              {busy[id] ? "正在更新…" : data ? "刷新数据" : "获取最新数据"}
-            </button>
+              {busy[id] ? "正在更新…" : data ? "刷新行情与资料" : "获取行情与资料"}
+            </button>}
             <button disabled={!connected} onClick={() => followup()}>
               继续研究 ↗
             </button>
           </div>}
         </div>
-        {data && <Observation board={board} data={data} />}
+        <div className="content-switch" aria-label="看板内容">
+          <button aria-pressed={mode === "research"} onClick={() => setMode("research")}>研究判断</button>
+          <button aria-pressed={mode === "market"} onClick={() => setMode("market")}>行情与线索</button>
+        </div>
+        {mode === "research" && <ResearchBrief id={id} connected={connected} ask={followup} />}
+        {mode === "market" && data && <Observation board={board} data={data} />}
         {errors[id] && (
           <div className="error" role="alert">
             {errors[id]}
@@ -511,13 +522,13 @@ export function BoardApp({ rpc, ask, view = {} }) {
         {busy[id] && (
           <div role="status">
             <p className="loading-copy">
-              正在读取行情与研究资料，完成后更新当前看板…
+              正在读取行情与资料，完成后可在「行情与线索」查看…
             </p>
             <div className="progress" />
           </div>
         )}
-        {id === "ai" && <Scenario params={connected ? params : { capital: 100, roi: 15, margin: 24 }} setParams={setParams} disabled={!connected} />}
-        <div className="grid">
+        {mode === "research" && id === "ai" && <Scenario params={connected ? params : { capital: 100, roi: 15, margin: 24 }} setParams={setParams} disabled={!connected} />}
+        {mode === "market" && <div className="grid">
           <div>
             <section className="section">
               {!connected ? <div className="static-preview">
@@ -647,7 +658,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
               这是研究框架；最新证据与判断在会话中继续交付。
             </p>
           </aside>
-        </div>
+        </div>}
         <footer className="foot">
           <span>
             {data
