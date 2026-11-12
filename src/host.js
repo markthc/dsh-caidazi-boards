@@ -1,5 +1,7 @@
 import { readFile, readdir } from "node:fs/promises";
 import { join } from "node:path";
+import { createPublicationReader } from "./publication.js";
+import { draftResearch } from "./synthesis.js";
 import { boards } from "./boards.js";
 import {
   mcpRoot,
@@ -82,6 +84,9 @@ export async function apply(ctx) {
   // Only owner peers may connect a personal key or invoke this fixed public-data surface.
   let connecting = false;
   const running = new Map();
+  const lifetime = new AbortController();
+  ctx.effect(()=>()=>lifetime.abort(), "caidazi data cleanup");
+  const readPublication = createPublicationReader();
   const handle = async (endpoint, payload, signal) => {
     try {
       const action = endpoint;
@@ -108,20 +113,21 @@ export async function apply(ctx) {
           connecting = false;
         }
       }
-      if (action === "refresh") {
+      if (action === "refresh" || action === "draft") {
         const id = payload?.id;
         if (!boards.some((b) => b.id === id))
           throw new DataError("input", "找不到这个看板");
-        if (running.has(id))
-          throw new DataError("busy", "这个看板正在更新，请稍候");
         const key = await ctx.credentials.resolve("CAIDAZI_API_KEY");
-        const task = loadBoard(id, key?.value, signal);
-        running.set(id, task);
-        try {
-          return { ok: true, value: await task };
-        } finally {
-          running.delete(id);
+        if (!key?.value) throw new DataError("auth", "请先连接财搭子");
+        if (!running.has(id)) {
+          const task = Promise.all([loadBoard(id, key.value, lifetime.signal), readPublication(lifetime.signal)])
+            .then(([data, publication]) => ({...data,publication}))
+            .finally(()=>running.delete(id));
+          running.set(id,task);
         }
+        const data = await running.get(id);
+        if (action === "draft") return {ok:true,value:await draftResearch({ctx,id,data,snapshot:data.publication.snapshot,signal})};
+        return {ok:true,value:data};
       }
       throw new DataError("input", "此操作不可用");
     } catch (e) {

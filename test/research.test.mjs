@@ -10,7 +10,7 @@ test('financial charts preserve source units and derived cash-flow figure', () =
   assert.deepEqual(cash.series[1].values, [3653692576.8, 11723854443.25].map(v => v / 1e8));
   const fcf = cash.series[0].values[1] - cash.series[1].values[1];
   assert.equal(fcf.toFixed(2), '-82.03');
-  assert.equal(research.pcb.facts[1].value, '−82.03 亿元');
+  assert.equal(research.pcb.facts.find(f=>f.label.includes('现金流')).value, '−82.03 亿元');
   assert.deepEqual(research.ai.charts[0].series[0].values, [1365, 3661].map(v => v / 100));
   assert.equal(((29 / 9.2 - 1) * 100).toFixed(1), '215.2');
 });

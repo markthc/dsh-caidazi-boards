@@ -1,4 +1,4 @@
-// Dated editorial research. Never relabel this as live MCP output.
+// Source-backed fallback; the public snapshot can update this content without a plugin upgrade.
 export const researchDate = "2026-11-12";
 export const sources = {
   "hynix": {
@@ -52,32 +52,108 @@ export const sources = {
     "date": "2026-11-06",
     "url": "https://disc.static.szse.cn/download/disc/disk03/finalpage/2026-11-06/b1fd9238-ef02-4223-aeae-837d3fa53e3b.pdf",
     "locator": "p2；订单能见度与分阶段投产"
+  },
+  "crwvdeck": {
+    "title": "CoreWeave 2026Q3 业绩演示",
+    "date": "2026-11-10",
+    "url": "https://investors.coreweave.com/",
+    "locator": "官方演示 p13、15、16；RPO与资本开支定义"
+  },
+  "search_ab33cec54bd6": {
+    "title": "存储又在酝酿新一轮涨价",
+    "date": "2026-11-11",
+    "url": "https://www.jwview.com/jingwei/html/11-11/696593.shtml",
+    "locator": "已核对中新经纬转载蓝鲸新闻原文；DRAM续创新高段，转引DRAMeXchange。原文未明确DDR代际，不能外推DDR5或HBM。"
   }
 };
 export const research = {
   "memory": {
     "headline": "近端长约更稳，远期利润仍要分品类看",
-    "summary": "不能把 NOR／DDR4 的定价风险外推到整个存储行业；也不能把 HBM 长约，套成兆易创新的利润保障。研究重心从“还涨多少”转向“高利润能维持多久”。",
-    "change": "加入旧制程与主流存储分化、长约价带和供给响应。",
+    "summary": "10月DDR 8Gb合约价仍在上涨，支持近端价格韧性；但这一规格不能代表全部DRAM，更不能代表NAND或HBM。结合长约与供给投入，判断重点仍是高利润能维持多久。",
+    "change": "新增9—10月DDR 8Gb合约价对比及产品口径约束；保留近端长约更稳、远期利润分品类验证的判断。",
     "facts": [
       {
-        "label": "SK hynix 已签 LTA 覆盖",
+        "label": "DDR 8Gb 平均合约价",
+        "value": "27.5 美元",
+        "detail": "2026年10月；9月26美元，环比+5.77%。媒体转引DRAMeXchange，原文未明确DDR代际。",
+        "sources": [
+          "search_ab33cec54bd6"
+        ]
+      },
+      {
+        "label": "SK hynix 长约锁量",
         "value": ">50%",
-        "detail": "2027—2028 总产能；锁量、价格随约定价带调整",
+        "detail": "覆盖2027—2028总产能；价格在约定价带内调整",
         "sources": [
           "hynix"
         ]
       },
       {
-        "label": "三星 2026Q3 集团资本开支",
+        "label": "三星集团资本开支",
         "value": "29 万亿韩元",
-        "detail": "同比 +215.2%；包含 DS、显示等，非纯存储投入",
+        "detail": "2026Q3；同比+215.2%，不等同于新增存储产能",
         "sources": [
           "samsung"
         ]
       }
     ],
     "charts": [
+      {
+        "title": "DDR 8Gb（1G×8）平均合约价",
+        "unit": "美元 / 颗",
+        "periods": [
+          "2026年9月",
+          "2026年10月"
+        ],
+        "series": [
+          {
+            "name": "平均合约价",
+            "values": [
+              26,
+              27.5
+            ]
+          }
+        ],
+        "note": "中新经纬转载蓝鲸新闻，转引DRAMeXchange；仅两个月披露点，非连续行情。原文未明确DDR代际，不能映射为DDR5或HBM。",
+        "sources": [
+          "search_ab33cec54bd6"
+        ]
+      },
+      {
+        "title": "SK hynix：收入、经营利润与净利润",
+        "unit": "万亿韩元",
+        "periods": [
+          "2025Q3",
+          "2026Q3"
+        ],
+        "series": [
+          {
+            "name": "收入",
+            "values": [
+              24.4489,
+              104.6155
+            ]
+          },
+          {
+            "name": "经营利润",
+            "values": [
+              11.3834,
+              83.3338
+            ]
+          },
+          {
+            "name": "净利润",
+            "values": [
+              12.5975,
+              39.7756
+            ]
+          }
+        ],
+        "note": "K-IFRS季度初步实绩；经营利润与净利润差异不能忽略。",
+        "sources": [
+          "hynix"
+        ]
+      },
       {
         "title": "三星集团资本开支",
         "unit": "万亿韩元",
@@ -119,9 +195,10 @@ export const research = {
       },
       {
         "title": "涨幅放缓、价格下跌、利润见顶是三件事",
-        "body": "先核合同价、出货 bit、库存及毛利率；再看制程迁移、良率和认证何时形成有效供给。若价格仍高而增速下降，不能只凭涨幅减速认定利润已下滑。",
+        "body": "这次合约价数据支持单品近端价格韧性，但不直接证明行业毛利率、现金流或利润持续期。继续对照各品类的出货、库存、制程迁移与供给兑现；不能把涨幅放缓等同于价格下跌。",
         "kind": "研究判断",
         "sources": [
+          "search_ab33cec54bd6",
           "niche",
           "hynix"
         ]
@@ -132,6 +209,47 @@ export const research = {
       "按产品核对合同价与取消／重定价条款",
       "跟踪新增合格 bit，而不是只看厂房或资本开支",
       "把毛利率、存货和经营现金流放在同一期比较"
+    ],
+    "dimensions": [
+      {
+        "title": "利基存储",
+        "signal": "消费端需求、备货和供给恢复共同定价",
+        "body": "NOR、DDR3/4与SLC/MLC NAND单独跟踪。渠道涨价不等于所有客户接受新的合同价格；订单前置也可能透支下一期采购。",
+        "watch": "合同价下调、取消订单、终端库存继续增加",
+        "sources": [
+          "niche"
+        ]
+      },
+      {
+        "title": "主流 DRAM / NAND",
+        "signal": "单品合约价续涨，不能外推全部存储",
+        "body": "报道转引的DDR 8Gb（1G×8）合约价从9月26美元升至10月27.5美元，环比+5.77%。原文未明确DDR代际；DDR5、NAND仍需各自合同价、出货bit与库存证据。",
+        "watch": "按产品核对量价及库存的同向变化",
+        "sources": [
+          "search_ab33cec54bd6",
+          "niche",
+          "hynix"
+        ]
+      },
+      {
+        "title": "HBM 与长约",
+        "signal": "近端锁量提高能见度，远期利润仍有变量",
+        "body": "14家大客户的LTA通常为5年；公司披露超过2027/28总产能50%的数量已锁定，价格随约定区间调整。未披露年份不视作利润保险。",
+        "watch": "价格条款、客户验收、有效出货与2029年后覆盖",
+        "sources": [
+          "hynix"
+        ]
+      },
+      {
+        "title": "资本开支与供给",
+        "signal": "投资增加先改变未来供给，再影响盈利持续期",
+        "body": "三星集团Q3投入从9.2升至29万亿韩元。需要继续拆分存储用途、投产日、制程迁移及良率；集团金额不能直接换算成新增bit。",
+        "watch": "新增合格bit产出、资本开支落地与库存回升",
+        "sources": [
+          "samsung",
+          "hynix"
+        ]
+      }
     ]
   },
   "ai": {
@@ -140,17 +258,25 @@ export const research = {
     "change": "纳入11月10日财报、客户预付款与项目可信度的新材料。",
     "facts": [
       {
-        "label": "CoreWeave 2026Q3 收入",
+        "label": "CoreWeave 季度收入",
         "value": "36.61 亿美元",
-        "detail": "同比 +168.2%；公司季度实绩",
+        "detail": "2026Q3；同比+168.2%，季度实绩",
         "sources": [
           "crwv"
         ]
       },
       {
-        "label": "调整后经营利润 / 净利息费用",
-        "value": "3.79 / 8.46 亿美元",
-        "detail": "同一季度；前者 Non-GAAP，后者 GAAP，不能当偿债覆盖率",
+        "label": "收入积压订单",
+        "value": "1,325 亿美元",
+        "detail": "9月末：RPO 1,323亿＋其他估计未来收入2亿；须实际交付",
+        "sources": [
+          "crwvdeck"
+        ]
+      },
+      {
+        "label": "经营现金流 − 购建资产现金",
+        "value": "−74.66 亿美元",
+        "detail": "2026Q3：19.75−94.41；简化现金缺口，不是全部融资需求",
         "sources": [
           "crwv"
         ]
@@ -176,6 +302,35 @@ export const research = {
         "note": "季度收入并非 ARR、合同额或现金回款。",
         "sources": [
           "crwv"
+        ]
+      },
+      {
+        "title": "收入增长与现金投入的速度",
+        "unit": "亿美元",
+        "periods": [
+          "2025Q3",
+          "2026Q3"
+        ],
+        "series": [
+          {
+            "name": "经营现金流",
+            "values": [
+              16.89,
+              19.75
+            ]
+          },
+          {
+            "name": "现金购建PP&E",
+            "values": [
+              32.79,
+              94.41
+            ]
+          }
+        ],
+        "note": "季度现金流；公司定义的CapEx含融资租赁等，2026Q3为145.11亿美元，不能与现金支出混用。",
+        "sources": [
+          "crwv",
+          "crwvdeck"
         ]
       }
     ],
@@ -237,6 +392,46 @@ export const research = {
       "核对约90亿美元预付款是否到账及用途限制",
       "区分签约电力、已通电、客户验收与开始计费",
       "对照2026全年370—390亿美元资本开支指引与实际现金支付"
+    ],
+    "dimensions": [
+      {
+        "title": "需求 → 交付 → 计费",
+        "signal": "合同储备是能见度，收入才是兑现",
+        "body": "1325亿美元backlog与1323亿美元RPO均不是已回款。需要对照通电、客户验收、服务可用及收入确认条件。",
+        "watch": "确认收入、投产和验收进度是否同步",
+        "sources": [
+          "crwv",
+          "crwvdeck"
+        ]
+      },
+      {
+        "title": "预付款与可用资金",
+        "signal": "约90亿美元是未来收款预期",
+        "body": "其中超过30亿美元对应此前已全部付清的既有设施。预付款改善融资时点，但服务义务仍存在，不能把款项全部视作新增经济利润。",
+        "watch": "到账金额、退款约束和履约支出",
+        "sources": [
+          "crwvcall"
+        ]
+      },
+      {
+        "title": "资产融资与母公司资本",
+        "signal": "母公司少筹资，不等于集团不加杠杆",
+        "body": "CFO预计截至2027年底额外母公司资本少于50亿美元；资产层面融资仍是来源。账面recourse与non-recourse债务合计468.73亿美元，不含租赁负债。",
+        "watch": "逐设施核对提款、母公司担保及还本安排",
+        "sources": [
+          "crwv",
+          "crwvcall"
+        ]
+      },
+      {
+        "title": "增长与资本回报",
+        "signal": "收入增长尚未覆盖融资和扩张成本",
+        "body": "Q3调整后经营利润3.79亿美元、净利息8.46亿美元；前者Non-GAAP、后者GAAP，差额不是严格覆盖倍数。租金、利用率、折旧和旧GPU续租仍决定回报。",
+        "watch": "利润、利息、再投资与现金支付是否改善",
+        "sources": [
+          "crwv"
+        ]
+      }
     ]
   },
   "pcb": {
@@ -245,17 +440,25 @@ export const research = {
     "change": "补入 HDI 实绩、11月6日排单与投产进展，以及三季报现金压力。",
     "facts": [
       {
-        "label": "胜宏 HDI 毛利率",
-        "value": "22.5% → 43.5%",
-        "detail": "2024 → 2025；产品组合与价格共同变化",
+        "label": "胜宏 HDI 收入",
+        "value": "15.21 → 74.25 亿元",
+        "detail": "2024 → 2025；高阶产品组合变化，不是简单按面积涨价",
         "sources": [
           "shprospectus"
         ]
       },
       {
-        "label": "胜宏简化自由现金流",
+        "label": "胜宏 HDI 毛利率",
+        "value": "22.5% → 43.5%",
+        "detail": "2024 → 2025；仍需核对良率、产品组合与持续性",
+        "sources": [
+          "shprospectus"
+        ]
+      },
+      {
+        "label": "经营现金流 − 购建资产现金",
         "value": "−82.03 亿元",
-        "detail": "2026年前三季度；经营现金流 − 购建长期资产现金",
+        "detail": "2026年前三季度：35.21−117.24；简化自由现金流",
         "sources": [
           "shq3"
         ]
@@ -350,6 +553,44 @@ export const research = {
       "分别核对材料认证、板件良率、验收与回款",
       "对照新产线进度与存货、应收、现金资本开支",
       "将高端子类增长与集团收入、净利润及摊薄 EPS 分开"
+    ],
+    "dimensions": [
+      {
+        "title": "规格价值",
+        "signal": "更高价值量来自材料、工序与良率的组合",
+        "body": "2024到2025年HDI销售面积由64.7降至55.1万平方米，收入反而增加。不能用面积变化或层数纪录单独解释定价。",
+        "watch": "同规格价格、工序、报废和客户组合",
+        "sources": [
+          "shprospectus"
+        ]
+      },
+      {
+        "title": "认证与稳定量产",
+        "signal": "高阶工艺需要客户验收才成为收入",
+        "body": "材料参数改善、板件认证和稳定良率是不同阶段。普通产线的扩张不等于高端合格产出，ABF用材料与板级PCB/CCL也须分别验证。",
+        "watch": "客户认证、批量交付、有效产出",
+        "sources": [
+          "shprospectus"
+        ]
+      },
+      {
+        "title": "排单与产能",
+        "signal": "排单延续至2028，仍不等于不可取消订单",
+        "body": "11月6日公告披露高端排单及北美大客户、ASIC需求；2027年起多地在建产能分阶段投产。首产、满产与实际回款各有时钟。",
+        "watch": "订单金额与约束、新产线验收、产能爬坡",
+        "sources": [
+          "shupdate"
+        ]
+      },
+      {
+        "title": "利润与现金",
+        "signal": "扩产现金领先回款，要看投入后的兑现",
+        "body": "前三季度经营现金流35.21亿元、购建长期资产117.24亿元；前者较同期增加11.38亿元，后者增加80.70亿元。增长不能只用利润表来验证。",
+        "watch": "应收、存货、现金资本开支与每股盈利",
+        "sources": [
+          "shq3"
+        ]
+      }
     ]
   }
 };

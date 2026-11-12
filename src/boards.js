@@ -2,6 +2,8 @@
 export const boards = [
   {
     id: "memory",
+    researchSymbol: "603986.SH",
+    searches: [["价格与需求", "DRAM 合约价格"], ["长约与供给", "美光 HBM 长约"], ["盈利与库存", "兆易创新 三季报"]],
     title: "存储产业跟踪",
     subtitle: "涨价，能否变成利润？",
     description:
@@ -34,6 +36,8 @@ export const boards = [
   },
   {
     id: "ai",
+    researchSymbol: "CRWV",
+    searches: [["交付与收入", "CoreWeave 三季报"], ["预付与融资", "CoreWeave 客户预付款"], ["资本开支", "微软 资本开支"]],
     title: "AI 基建 · 成本与回报",
     subtitle: "投得多，还要赚得回来",
     description:
@@ -82,6 +86,8 @@ export const boards = [
   },
   {
     id: "pcb",
+    researchSymbol: "300476.SZ",
+    searches: [["规格与认证", "胜宏科技 高阶HDI"], ["材料与量产", "生益科技 高速材料"], ["盈利与回款", "沪电股份 三季报"]],
     title: "PCB／CCL · 升级兑现",
     subtitle: "规格升级，订单兑现了吗？",
     description:

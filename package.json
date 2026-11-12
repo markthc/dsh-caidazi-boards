@@ -1,6 +1,6 @@
 {
   "name": "@caidazi/dsh-boards",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "财搭子研究看板：存储产业、AI 基建回报与 PCB/CCL 兑现跟踪，接入财搭子 MCP。",
   "type": "module",
   "license": "MIT",
@@ -14,6 +14,10 @@
     "src/host.js",
     "src/data.js",
     "src/boards.js",
+    "src/market.js",
+    "src/research.js",
+    "src/publication.js",
+    "src/synthesis.js",
     "lib/client.js",
     "cordis.patch.yml",
     "README.md",

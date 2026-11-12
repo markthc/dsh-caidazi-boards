@@ -3,6 +3,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { boards } from "./boards.js";
+import { loadCandles } from "./market.js";
 const require = createRequire(import.meta.url);
 export const mcpRoot = dirname(require.resolve("@caidazi/mcp/package.json"));
 // Resolve the published executable without relying on an ambient npx or global install.
@@ -40,7 +41,7 @@ export function decode(result) {
 export async function withMcp(key, run, signal) {
   if (!key) throw new DataError("auth", "请先连接财搭子");
   const client = new Client(
-    { name: "caidazi-dsh-boards", version: "0.1.3" },
+    { name: "caidazi-dsh-boards", version: "0.2.0" },
     { capabilities: {} },
   );
   const transport = new StdioClientTransport({
@@ -170,6 +171,7 @@ export function citationsFrom(value, board, now = new Date()) {
       !board.terms.some((t) => r.title.toLowerCase().includes(t.toLowerCase()))
     )
       continue;
+    if (/行情走势|^[^（）()]+\((?:sz|sh)\d{6}\)$/i.test(r.title)) continue;
     let url;
     try {
       url = new URL(r.url);
@@ -182,7 +184,7 @@ export function citationsFrom(value, board, now = new Date()) {
     } catch {
       continue;
     }
-    const date =
+    let date =
       typeof r.publishTime === "string" ? r.publishTime.slice(0, 10) : "";
     if (
       !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
@@ -191,7 +193,10 @@ export function citationsFrom(value, board, now = new Date()) {
       new Date(date) > now
     )
       continue;
-    // Conflicting body date cannot silently become the card's publication date.
+    // A full publication timestamp in the article header outranks search indexing time.
+    const explicit = String(r.content || "").slice(0,180).match(/(20\d{2}-\d{2}-\d{2})[ T]\d{2}:\d{2}/)?.[1];
+    if (explicit && Number.isFinite(Date.parse(explicit)) && new Date(explicit) <= now && new Date(explicit) >= cutoff) date = explicit;
+    // A bare conflicting date is ambiguous; do not infer its meaning.
     const leadingDate = String(r.content || "")
       .slice(0, 180)
       .match(/20\d{2}-\d{2}-\d{2}/)?.[0];
@@ -221,50 +226,35 @@ export function safeError(e) {
 export async function loadBoard(id, key, signal) {
   const board = boards.find((b) => b.id === id);
   if (!board) throw new DataError("input", "找不到这个看板");
-  return withMcp(
-    key,
-    async (call) => {
-      const requestedAt = new Date().toISOString();
-      const parts = await Promise.allSettled([
-        call("get_a_share_history_1m_price", {
-          symbols: [board.symbol],
-          trading_days: 2,
-        }).then((v) => historyFrom(v, board.symbol)),
-        call("get_real_time_record", { symbol: board.symbol }).then((v) =>
-          quoteFrom(v, board.symbol),
-        ),
-        call("investment_search_pro", {
-          query: `${board.query} 最近30天，今天 ${requestedAt.slice(0, 10)}`,
-        }).then((v) => citationsFrom(v, board)),
-        ...board.peers.map(([symbol]) =>
-          call("get_real_time_record", { symbol }).then((v) =>
-            quoteFrom(v, symbol),
-          ),
-        ),
-      ]);
-      const auth = parts.find(
-        (p) => p.status === "rejected" && p.reason?.code === "auth",
-      );
-      if (auth) throw auth.reason;
-      const part = (i) =>
-        parts[i].status === "fulfilled"
-          ? { ok: true, value: parts[i].value }
-          : { ok: false, error: safeError(parts[i].reason) };
-      return {
-        id,
-        requestedAt,
-        history: part(0),
-        quote: part(1),
-        news: part(2),
-        peers: board.peers.map((p, i) => ({
-          symbol: p[0],
-          name: p[1],
-          ...part(i + 3),
-        })),
-      };
-    },
-    signal,
-  );
+  return withMcp(key, async (call) => {
+    const requestedAt = new Date().toISOString();
+    const symbols = [[board.symbol, board.asset], ...board.peers];
+    const tasks = [
+      ...symbols.map(([symbol]) => call("get_real_time_record", {symbol}).then(v=>quoteFrom(v,symbol))),
+      ...board.searches.map(async ([topic, query]) => {
+        const raw = await call("investment_search_pro", {query});
+        const result = citationsFrom(raw, board);
+        return {topic, query, ...result, items:result.items.map(item=>({
+          ...item,
+          excerpt: item.rights === "authorized" ? String(raw.search_result.find(r=>r.url===item.url)?.content || "").replace(/<[^>]*>/g, "").replace(/[#*_]+/g, "").trim().slice(0,600) : "",
+        }))};
+      }),
+      ...symbols.map(([symbol])=>loadCandles(symbol, signal)),
+    ];
+    const parts = await Promise.allSettled(tasks);
+    const auth = parts.find(p=>p.status === "rejected" && p.reason?.code === "auth");
+    if (auth) throw auth.reason;
+    const part = i => parts[i].status === "fulfilled" ? {ok:true,value:parts[i].value} : {ok:false,error:safeError(parts[i].reason)};
+    const tracks = board.searches.map(([topic],i)=>({topic,...part(symbols.length+i)}));
+    const items = [...new Map(tracks.flatMap(t=>t.ok?t.value.items:[]).map(n=>[n.url,n])).values()].sort((a,b)=>b.date.localeCompare(a.date));
+    return {
+      id, requestedAt, quote:part(0),
+      peers:board.peers.map(([symbol,name],i)=>({symbol,name,...part(i+1)})),
+      tracks,
+      news:{ok:tracks.some(t=>t.ok),value:{items}},
+      candles:symbols.map(([symbol,name],i)=>({symbol,name,...part(symbols.length+board.searches.length+i)})),
+    };
+  }, signal);
 }
 export async function verifyKey(key, signal) {
   return withMcp(
