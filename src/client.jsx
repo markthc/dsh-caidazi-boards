@@ -305,8 +305,11 @@ export function BoardApp({ rpc, ask, view = {} }) {
   }, [id, store, params]);
   useEffect(() => {
     if (!ready || !connected) return;
+    setStore({ ...view.store });
+    setErrors({ ...view.errors });
+    setBusy(Object.fromEntries(Object.keys(view.pending).map((key) => [key, true])));
     for (const target of Object.keys(view.pending)) void refresh(target);
-    if (!view.pending[id] && !store[id] && !errors[id]) void refresh(id);
+    if (!view.pending[id] && !view.store[id] && !view.errors[id]) void refresh(id);
   }, [ready, connected, id]);
   const request = async (action, payload) => {
     const r = await rpc(action, payload);
@@ -505,6 +508,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
             <div className="progress" />
           </div>
         )}
+        {id === "ai" && <Scenario params={params} setParams={setParams} />}
         <div className="grid">
           <div>
             <section className="section">
@@ -628,7 +632,6 @@ export function BoardApp({ rpc, ask, view = {} }) {
             </p>
           </aside>
         </div>
-        {id === "ai" && <Scenario params={params} setParams={setParams} />}
         <footer className="foot">
           <span>
             {data
