@@ -100,7 +100,7 @@ export const research = {
     "charts": [
       {
         "title": "DDR 8Gb（1G×8）平均合约价",
-        "unit": "美元 / 颗",
+        "unit": "美元",
         "periods": [
           "2026年9月",
           "2026年10月"

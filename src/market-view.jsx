@@ -43,6 +43,6 @@ export function MarketPanel({board,data,connected}) {
   const quote=quotes.find(q=>q.symbol===chosen?.symbol);
   return <section className="market-panel"><div className="company-switch" role="group" aria-label="选择公司">{symbols.map(([symbol,name])=><button key={symbol} aria-pressed={(chosen?.symbol||selected)===symbol} onClick={()=>setSelected(symbol)}>{name}<small>{symbol}</small></button>)}</div>
     {quote?.ok&&<div className="market-quote"><h2>{quote.name}</h2><strong>{quote.value.price}</strong><span className={Number.parseFloat(quote.value.change)>=0?'up':'down'}>{quote.value.change}</span><small>{quote.value.asOf} · {quote.value.timezone} · 财搭子行情</small></div>}
-    {chosen?.ok?<CandleChart key={chosen.symbol} series={chosen.value}/>:<p className="empty">{connected?'日K正在获取；如果数据源暂不可用，可稍后更新。':'连接后查看各公司的日K、周K、成交量和历史区间。'}</p>}
+    {chosen?.ok?<CandleChart key={chosen.symbol} series={chosen.value}/>:<p className="empty">{connected?(chosen?.ok===false?'日K数据源暂不可用，请点击更新看板重试。':'日K将在本次更新完成后显示。'):'连接后查看各公司的日K、周K、成交量和历史区间。'}</p>}
   </section>;
 }

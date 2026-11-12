@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { research, researchDate, sources } from './research.js';
 export const publicationRoot='https://raw.githubusercontent.com/markthc/dsh-caidazi-boards/main/research/';
-export const bundledSnapshot={schemaVersion:1,version:'2026-11-12.2',publishedAt:'2026-11-12T08:38:16.464Z',boards:research,sources};
+export const bundledSnapshot={schemaVersion:1,version:'2026-11-12.3',publishedAt:'2026-11-12T08:45:47.076Z',boards:research,sources};
 const fail=()=>{throw new Error('Invalid research snapshot')};
 const obj=v=>{if(!v||typeof v!=='object'||Array.isArray(v))fail();return v};
 const keys=(v,allowed)=>{obj(v);if(Object.keys(v).some(k=>!allowed.includes(k)))fail()};

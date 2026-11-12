@@ -8,7 +8,7 @@ test('snapshot validates source IDs, schema, URLs and chart alignment',()=>{
   for(const edit of [s=>s.boards.memory.facts[0].sources=['fake'],s=>s.sources.hynix.url='javascript:alert(1)',s=>s.boards.ai.charts[0].series[0].values=[3],s=>s.boards.ai.html='<script/>',s=>s.sources.hynix.date='2026-02-31']){const s=copy();edit(s);assert.throws(()=>validateSnapshot(s))}
 });
 test('two consumers receive same immutable snapshot; corruption/offline keeps last good version',async()=>{
-  const s=copy();s.version='2026-11-12.3';s.publishedAt=new Date().toISOString();s.boards.memory.change='测试：增加供给验证维度';const body=JSON.stringify(s);
+  const s=copy();s.version='2026-11-12.4';s.publishedAt=new Date().toISOString();s.boards.memory.change='测试：增加供给验证维度';const body=JSON.stringify(s);
   let broken=false,offline=false;
   const fetcher=async url=>{if(offline)throw new Error();return new Response(url.endsWith('latest.json')?JSON.stringify({schemaVersion:1,version:s.version,path:`snapshots/${s.version}.json`,sha256:broken?'0'.repeat(64):digest(body)}):body)};
   const a=createPublicationReader(fetcher),b=createPublicationReader(fetcher);
