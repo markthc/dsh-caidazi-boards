@@ -4,27 +4,35 @@
 
 ![美国政策与数据中心看板](https://raw.githubusercontent.com/markthc/dsh-caidazi-boards/main/docs/policy-board.png)
 
+## 界面语言 / Language
+
+顶部语言菜单提供「跟随系统 / 简体中文 / English」。首次使用跟随 DSH 内嵌浏览器或当前浏览器报告的首选语言。手动选择保存在当前浏览器，返回「跟随系统」后继续响应语言变化。其他语言默认使用英文。
+
+四张看板的研究正文、指标单位、图表、州地图、连接提示和追问均支持中英切换。外部检索文章标题与摘录保留原文。切换语言保留当前栏目、测算参数与正在运行的更新。
+
+The language menu supports System, 简体中文 and English. System follows the language preferences reported by the DSH webview or browser. Manual choices persist in that browser. Research, charts, map labels, connection states and follow-up prompts are localized. Retrieved article titles and excerpts retain their original language.
+
 ## 安装与使用
 
-v0.3.1 支持 **DSH 0.2.2-rc.1 / rc.2**，不需要 `allow-version`。命令行版需要 Node.js 24.9.0+；官方 Desktop 使用自带运行环境。
+v0.3.2 支持 **DSH 0.2.2-rc.1 / rc.2**，不需要 `allow-version`。命令行版需要 Node.js 24.9.0+；官方 Desktop 使用自带运行环境。
 
 Desktop 在 Plugins 中安装以下 URL，然后重新打开财搭子看板；若仍显示旧版，重启 DSH：
 
 ```text
-https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.1/caidazi-dsh-boards-0.3.1.tgz
+https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.2/caidazi-dsh-boards-0.3.2.tgz
 ```
 
 Web 可从 npm 安装：
 
 ```sh
-dsh plugin --profile web add @caidazi/dsh-boards@0.3.1
+dsh plugin --profile web add @caidazi/dsh-boards@0.3.2
 dsh web
 ```
 
 也可使用 GitHub Release 安装包：
 
 ```sh
-dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.1/caidazi-dsh-boards-0.3.1.tgz
+dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.2/caidazi-dsh-boards-0.3.2.tgz
 dsh web
 ```
 
@@ -130,4 +138,6 @@ npm pack
 
 仍需改进：完整产品价格与企业季度连续数据、行业横向覆盖、自动财报抽取核验、常驻事件/定时调度。公共快照是共享研究，尚不包含个人收藏/fork或账户定制。Yahoo接口无SLA，境内网络及数据授权需在产品化前确认；公司图表不能外推为行业整体。
 
-代码MIT；品牌商标仍归财搭子。公开包不含个人Key、账户、测试响应、研究库原件或机构报告全文。插件已在[1024 Store](https://deepseek1024.com/plugins/markthc/dsh-caidazi-boards)收录，可下载[GitHub Release安装包](https://github.com/markthc/dsh-caidazi-boards/releases/tag/v0.3.1)。Plugin Hub与Plugin Radar的收录申请正在处理中。
+代码MIT；品牌商标仍归财搭子。公开包不含个人Key、账户、测试响应、研究库原件或机构报告全文。插件已在[1024 Store](https://deepseek1024.com/plugins/markthc/dsh-caidazi-boards)收录，可下载[GitHub Release安装包](https://github.com/markthc/dsh-caidazi-boards/releases/tag/v0.3.2)。Plugin Hub与Plugin Radar的收录申请正在处理中。
+
+研究发布时需在 `src/locales/en.json` 补齐新增正文的英文翻译。现有发布命令会检查覆盖范围，并同时准备 `research/locales/en.json`。英文文件绑定研究版本与原快照 SHA256，随研究快照提交发布后，用户更新即可获取。

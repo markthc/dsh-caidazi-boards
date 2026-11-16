@@ -48,6 +48,7 @@ export function validateSnapshot(s) {
 export const digest=text=>createHash('sha256').update(text).digest('hex');
 export function createPublicationReader(fetcher=fetch) {
   let current=validateSnapshot(structuredClone(bundledSnapshot));
+  let translations, translatedVersion;
   return async function read(signal){
     try{
       const get=async path=>{const r=await fetcher(publicationRoot+path,{signal:AbortSignal.any([AbortSignal.timeout(15000),...(signal?[signal]:[])]),redirect:'error',headers:{'Cache-Control':'no-cache'}});if(!r.ok)throw new Error('Publication unavailable');const t=await r.text();if(t.length>600000)fail();return t};
@@ -57,7 +58,21 @@ export function createPublicationReader(fetcher=fetch) {
       const next=validateSnapshot(JSON.parse(text));if(next.version!==m.version)fail();
       if(Date.parse(next.publishedAt)<Date.parse(current.publishedAt))throw new Error('Older publication');
       const changed=current.version!==next.version;current=next;
-      return {snapshot:current,changed,checkedAt:new Date().toISOString()};
-    }catch{return {snapshot:current,changed:false,warning:'公共研究暂未同步，保留当前版本；公司行情和证据独立更新。'}}
+      if (translatedVersion !== current.version) {
+        try {
+          const locale = JSON.parse(await get('locales/en.json'));
+          keys(locale, ['schemaVersion', 'researchVersion', 'sourceSha256', 'messages']);
+          if (locale.schemaVersion !== 1 || locale.researchVersion !== current.version || locale.sourceSha256 !== m.sha256) fail();
+          obj(locale.messages);
+          if (Object.keys(locale.messages).length > 3000) fail();
+          for (const [source, english] of Object.entries(locale.messages)) { str(source, 4000); str(english, 12000); }
+          translations = { en: locale.messages };
+          translatedVersion = current.version;
+        } catch {
+          translations = undefined;
+        }
+      }
+      return {snapshot:current,translations,changed,checkedAt:new Date().toISOString()};
+    }catch{return {snapshot:current,translations,changed:false,warning:'公共研究暂未同步，保留当前版本；公司行情和证据独立更新。'}}
   };
 }

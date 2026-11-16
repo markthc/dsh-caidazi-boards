@@ -16,6 +16,26 @@ test('two consumers receive same immutable snapshot; corruption/offline keeps la
   broken=true;assert.equal((await a()).snapshot.boards.memory.change,s.boards.memory.change);assert.ok((await a()).warning);
   offline=true;assert.equal((await a()).snapshot.version,s.version);
 });
+test('English research messages are tied to the verified source snapshot and cached by version', async () => {
+  const snapshot = copy();
+  snapshot.publishedAt = new Date().toISOString();
+  const text = JSON.stringify(snapshot), sha256 = digest(text);
+  let localeReads = 0;
+  const locale = {schemaVersion:1,researchVersion:snapshot.version,sourceSha256:sha256,messages:{[snapshot.boards.memory.headline]:'English research view'}};
+  const fetcher = async url => {
+    if (url.endsWith('latest-v2.json')) return new Response(JSON.stringify({schemaVersion:2,version:snapshot.version,path:`snapshots/${snapshot.version}.json`,sha256}));
+    if (url.endsWith('locales/en.json')) {localeReads++;return new Response(JSON.stringify(locale));}
+    return new Response(text);
+  };
+  const read = createPublicationReader(fetcher);
+  assert.equal((await read()).translations.en[snapshot.boards.memory.headline], 'English research view');
+  await read();
+  assert.equal(localeReads, 1);
+  locale.sourceSha256 = '0'.repeat(64);
+  const mismatch = await createPublicationReader(fetcher)();
+  assert.equal(mismatch.translations, undefined);
+  assert.equal(mismatch.snapshot.version, snapshot.version);
+});
 test('model draft does not silently publish; unauthorized evidence cannot enter model context',async()=>{
   let called=false,content='';
   const ctx={get:name=>name==='agentDefaultModel'?{currentSelection:()=>({provider:'test',model:'test'})}:{stream:async function*(o){called=true;content=o.messages[0].content[0].text;yield{type:'text-delta',text:JSON.stringify({changed:false,reason:'无实质新证据',review:[],board:copy().boards.memory})};yield{type:'finish',reason:{kind:'stop'}}}}};

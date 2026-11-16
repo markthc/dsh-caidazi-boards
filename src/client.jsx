@@ -3,7 +3,7 @@
  STORY: Connect once, read current evidence, change assumptions, ask a focused follow-up.
  FIRST VIEWPORT: Compact title, four text tabs; price evidence left, research conditions right.
  FORM: Native main panel extending the established visual system; no new app shell. */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { boards, revenueThreshold } from "./boards.js";
 import { css } from "./style.js";
 import { logo, dafa } from "./brand.js";
@@ -11,6 +11,8 @@ import { ResearchBrief } from "./research-view.jsx";
 import { research, researchDate, sources } from "./research.js";
 import { PolicyMap } from "./policy-view.jsx";
 import { MarketPanel } from "./market-view.jsx";
+import { LanguageProvider, LanguageSelector, useLanguage } from "./locale.jsx";
+import { localizeContent, formatTime } from "./i18n.js";
 export const inject = ["slots", "connection", "uiWorkspace"];
 function BoardIcon({ size = 20 }) {
   return (
@@ -28,32 +30,22 @@ function BoardIcon({ size = 20 }) {
     </svg>
   );
 }
-const time = (s) =>
-  s
-    ? new Date(s).toLocaleString("zh-CN", {
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      })
-    : "";
 function Scenario({ params, setParams, disabled = false }) {
+  const { language, t } = useLanguage();
   const { capital, roi, margin } = params;
   const value = revenueThreshold(capital, roi, margin);
   const max = (capital * roi) / 10;
   return (
     <section className="scenario">
-      <h2>需要多少收入，才能达到回报要求？</h2>
+      <h2>{t("需要多少收入，才能达到回报要求？")}</h2>
       <p className="sub">
-        {disabled ? "静态测算预览 · 连接后可调整假设。" : "假设测算 · 可修改，不代表公司预测。"}以净利润／已投产资本为静态目标，不含建设期、杠杆及追加投入，不是项目 IRR。
-      </p>
+        {disabled ? t("静态测算预览 · 连接后可调整假设。") : t("假设测算 · 可修改，不代表公司预测。")}{t("以净利润／已投产资本为静态目标，不含建设期、杠杆及追加投入，不是项目 IRR。")}</p>
       <div className="layout">
         <fieldset disabled={disabled}>
           <label>
-            <span>已投产资本 · 亿元</span>
+            <span>{t("已投产资本 · 亿元")}</span>
             <input
-              aria-label="已投产资本（亿元）"
+              aria-label={t("已投产资本（亿元）")}
               type="number"
               min="1"
               max="100000"
@@ -71,11 +63,10 @@ function Scenario({ params, setParams, disabled = false }) {
             />
           </label>
           <label>
-            <span>
-              净利润 / 投产资本目标<output>{roi}%</output>
+            <span>{t("净利润 / 投产资本目标")}<output>{roi}%</output>
             </span>
             <input
-              aria-label="净利润与投产资本目标比率"
+              aria-label={t("净利润与投产资本目标比率")}
               type="range"
               min="5"
               max="25"
@@ -85,11 +76,10 @@ function Scenario({ params, setParams, disabled = false }) {
             />
           </label>
           <label>
-            <span>
-              净利率<output>{margin}%</output>
+            <span>{t("净利率")}<output>{margin}%</output>
             </span>
             <input
-              aria-label="净利率"
+              aria-label={t("净利率")}
               type="range"
               min="10"
               max="40"
@@ -102,19 +92,17 @@ function Scenario({ params, setParams, disabled = false }) {
           </label>
         </fieldset>
         <div>
-          <p className="calculation">
-            年收入门槛 <strong>{value.toFixed(1)}</strong> 亿元
-          </p>
+          <p className="calculation">{t("年收入门槛")}<strong>{value.toFixed(1)}</strong>{t("亿元")}</p>
           <figure>
             <figcaption>
-              <span>年收入门槛 · 亿元</span>
-              <span>横轴：净利率</span>
+              <span>{t("年收入门槛 · 亿元")}</span>
+              <span>{t("横轴：净利率")}</span>
             </figcaption>
             <svg
               className="chart"
               viewBox="0 0 440 190"
               role="img"
-              aria-label={`不同净利率下的年收入门槛；当前${value.toFixed(1)}亿元`}
+              aria-label={t("不同净利率下的年收入门槛；当前{value0}亿元", { value0: value.toFixed(1) })}
             >
               {[0, max / 2, max].map((v) => (
                 <g key={v}>
@@ -155,14 +143,15 @@ function Scenario({ params, setParams, disabled = false }) {
             </svg>
           </figure>
           <p className="sub">
-            {capital} × {roi}% ÷ {margin}% = {value.toFixed(1)} 亿元／年
-          </p>
+            {capital} × {roi}% ÷ {margin}% = {value.toFixed(1)}{t("亿元／年")}</p>
         </div>
       </div>
     </section>
   );
 }
-export function BoardApp({ rpc, ask, view = {} }) {
+function BoardContent({ rpc, ask, view = {} }) {
+  const { language, t } = useLanguage();
+  const tabsRef = useRef(null);
   view.store ??= {};
   view.pending ??= {};
   view.errors ??= {};
@@ -182,8 +171,18 @@ export function BoardApp({ rpc, ask, view = {} }) {
   const [params, setParams] = useState(
     view.params || { capital: 100, roi: 15, margin: 24 },
   );
-  const board = boards.find((b) => b.id === id),
+  const board = localizeContent(boards.find((b) => b.id === id), language),
     data = connected ? store[id] : undefined;
+  useEffect(() => {
+    const tabs = tabsRef.current;
+    const selected = tabs?.querySelector('[aria-selected="true"]');
+    if (!selected) return;
+    const container = tabs.getBoundingClientRect();
+    const item = selected.getBoundingClientRect();
+    if (item.left < container.left || item.right > container.right) {
+      tabs.scrollLeft += item.left - container.left - (container.width - item.width) / 2;
+    }
+  }, [id, language]);
   useEffect(() => {
     view.id = id;
     view.params = params;
@@ -218,7 +217,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
       })
       .catch(() => {
         if (alive) {
-          setConnectionError("无法连接 DSH 服务，请重新打开页面");
+          setConnectionError(t("无法连接 DSH 服务，请重新打开页面"));
           setReady(true);
         }
       });
@@ -277,39 +276,37 @@ export function BoardApp({ rpc, ask, view = {} }) {
     }
   }
   function followup(question = board.question) {
-    let prompt = `使用财搭子 Skills 和已连接的财搭子 MCP，继续「${board.title}」研究。\n${question}\n只读研究，不创建定时任务、不修改自选或持仓。写清数据时点、原始来源、事实与假设；缺少证据不判定通过。`;
-    const editorial = data?.publication?.snapshot?.boards[id] || research[id];
-    prompt += `\n看板研究版本：${data?.publication?.snapshot?.publishedAt?.slice(0,10) || researchDate}（已发布研究；新资料仍需核验）。当前判断：${editorial.headline}。重评条件：${editorial.reassess}请先核对是否出现更新，不能将上述判断当作已验证结论。`;
+    let prompt = t("使用财搭子 Skills 和已连接的财搭子 MCP，继续「{value0}」研究。\n{value1}\n只读研究，不创建定时任务、不修改自选或持仓。写清数据时点、原始来源、事实与假设；缺少证据不判定通过。", { value0: board.title, value1: question });
+    const editorial = localizeContent(data?.publication?.snapshot?.boards[id] || research[id], language, data?.publication?.translations?.en);
+    prompt += t("\n看板研究版本：{value0}（已发布研究；新资料仍需核验）。当前判断：{value1}。重评条件：{value2}请先核对是否出现更新，不能将上述判断当作已验证结论。", { value0: data?.publication?.snapshot?.publishedAt?.slice(0,10) || researchDate, value1: editorial.headline, value2: editorial.reassess });
     if (data)
-      prompt += `\n用户已查看的看板获取时间：${data.requestedAt}。参考标的：${[board.symbol, ...board.peers.map(p => p[0])].join("、")}。请重新核对最新数据。`;
+      prompt += t("\n用户已查看的看板获取时间：{value0}。参考标的：{value1}。请重新核对最新数据。", { value0: data.requestedAt, value1: [board.symbol, ...board.peers.map(p => p[0])].join("、") });
     if (id === "ai")
-      prompt += `\n用户情景假设（非公司实绩）：投产资本${params.capital}亿元，净利润／投产资本目标${params.roi}%，净利率${params.margin}%，收入门槛${revenueThreshold(params.capital, params.roi, params.margin).toFixed(1)}亿元/年。`;
+      prompt += t("\n用户情景假设（非公司实绩）：投产资本{value0}亿元，净利润／投产资本目标{value1}%，净利率{value2}%，收入门槛{value3}亿元/年。", { value0: params.capital, value1: params.roi, value2: params.margin, value3: revenueThreshold(params.capital, params.roi, params.margin).toFixed(1) });
     ask(prompt);
   }
   const publication = data?.publication;
   const snapshot = publication?.snapshot;
-  const editorial = snapshot?.boards[id] || research[id];
-  const sourceMap = snapshot?.sources || sources;
+  const editorial = localizeContent(snapshot?.boards[id] || research[id], language, publication?.translations?.en);
+  const sourceMap = localizeContent(snapshot?.sources || sources, language, publication?.translations?.en);
   return (
-    <div className="cdz">
+    <div className="cdz" lang={language === "zh" ? "zh-CN" : "en"}>
       <style>{css}</style>
       <header className="top">
         <div className="brand">
-          <img className="brand-logo" src={logo} alt="财搭子 Logo" />
-          财搭子 <span className="brand-title">研究看板</span>
+          <img className="brand-logo" src={logo} alt={t("财搭子 Logo")} />{t("财搭子")}<span className="brand-title">{t("研究看板")}</span>
         </div>
+        <div className="top-actions"><LanguageSelector />
         <button className="connected" onClick={() => connected ? setSettings(!settings) : document.getElementById("caidazi-key")?.focus()}>
           {connected ? (
             <>
-              <i />
-              已连接财搭子
-            </>
+              <i />{t("已连接财搭子")}</>
           ) : (
-            "连接财搭子"
+            t("连接财搭子")
           )}
-        </button>
+        </button></div>
       </header>
-      <nav className="tabs" role="tablist" aria-label="研究看板">
+      <nav ref={tabsRef} className="tabs" role="tablist" aria-label={t("研究看板")}>
         {boards.map((b) => (
           <button
             role="tab"
@@ -317,7 +314,7 @@ export function BoardApp({ rpc, ask, view = {} }) {
             aria-selected={id === b.id}
             onClick={() => setId(b.id)}
           >
-            {b.title}
+            {t(b.title)}
           </button>
         ))}
       </nav>
@@ -325,21 +322,21 @@ export function BoardApp({ rpc, ask, view = {} }) {
         {(settings || (ready && !connected)) && (
           <section className="connect">
             <div className="connect-heading">
-              <img src={dafa} alt="大发" width="44" height="44" />
-              <div><h2>{connected ? "更换财搭子连接" : "让大发帮你跟踪最新变化"}</h2>
-              <p>{connected ? "粘贴新的 API Key，验证后切换连接。" : "当前为静态预览。连接后，获取真实行情与研究资料。"}</p></div>
+              <img src={dafa} alt={t("大发")} width="44" height="44" />
+              <div><h2>{connected ? t("更换财搭子连接") : t("让大发帮你跟踪最新变化")}</h2>
+              <p>{connected ? t("粘贴新的 API Key，验证后切换连接。") : t("当前为静态预览。连接后，获取真实行情与研究资料。")}</p></div>
             </div>
-            <ol className="key-steps" aria-label="在财搭子 App 获取 Key">
-              <li>打开财搭子 App <b>大发页</b></li>
-              <li>打开左侧菜单，进入 <b>我的skill</b></li>
-              <li><b>领取 API Key</b>，或在 <b>我的API KEY管理</b> 中复制</li>
+            <ol className="key-steps" aria-label={t("在财搭子 App 获取 Key")}>
+              <li>{t("打开财搭子 App")}<b>{t("大发页")}</b></li>
+              <li>{t("打开左侧菜单，进入")}<b>{t("我的skill")}</b></li>
+              <li><b>{t("领取 API Key")}</b>{t("，或在")}<b>{t("我的API KEY管理")}</b>{t("中复制")}</li>
             </ol>
             <form onSubmit={connect}>
               <input
                 id="caidazi-key"
                 type="password"
-                aria-label="财搭子 API Key"
-                placeholder="粘贴 API Key"
+                aria-label={t("财搭子 API Key")}
+                placeholder={t("粘贴 API Key")}
                 autoComplete="off"
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
@@ -353,24 +350,22 @@ export function BoardApp({ rpc, ask, view = {} }) {
                   Object.keys(view.pending).length > 0
                 }
               >
-                {connecting ? "正在验证…" : "连接财搭子"}
+                {connecting ? t("正在验证…") : t("连接财搭子")}
               </button>
             </form>
             <div className="row">
               <a
-                href="https://zhicepilot.com"
+                href="https://www.facaidazi.com"
                 target="_blank"
                 rel="noopener noreferrer"
-              >
-                还没有财搭子？前往下载 ↗
-              </a>
-              <span className="sub">Key 保存在 DSH 凭据区</span>
+              >{t("还没有财搭子？前往下载 ↗")}</a>
+              <span className="sub">{t("Key 保存在 DSH 凭据区")}</span>
             </div>
           </section>
         )}
         {connectionError && (
           <div className="error" role="alert">
-            {connectionError}
+            {t(connectionError)}
           </div>
         )}
         <div className="intro">
@@ -384,19 +379,17 @@ export function BoardApp({ rpc, ask, view = {} }) {
               disabled={!ready || !connected || busy[id]}
               onClick={() => refresh()}
             >
-              {busy[id] ? "正在更新…" : "更新看板"}
+              {busy[id] ? t("正在更新…") : t("更新看板")}
             </button>}
-            <button disabled={!connected} onClick={() => followup()}>
-              继续研究 ↗
-            </button>
+            <button disabled={!connected} onClick={() => followup()}>{t("继续研究 ↗")}</button>
           </div>}
         </div>
-        <div className="content-switch" aria-label="看板内容">
-          {[["research","核心判断"],["evidence",id === "policy" ? "政策进展" : "产业证据"],["financial",id === "policy" ? "州级分布" : "经营数据"],["market",id === "policy" ? "关联行情" : "市场定价"]].map(([value,label])=><button key={value} aria-pressed={mode===value} onClick={()=>setMode(value)}>{label}</button>)}
+        <div className="content-switch" aria-label={t("看板内容")}>
+          {[["research",t("核心判断")],["evidence",id === "policy" ? t("政策进展") : t("产业证据")],["financial",id === "policy" ? t("州级分布") : t("经营数据")],["market",id === "policy" ? t("关联行情") : t("市场定价")]].map(([value,label])=><button key={value} aria-pressed={mode===value} onClick={()=>setMode(value)}>{label}</button>)}
         </div>
-        {errors[id] && <div className="error" role="alert">{errors[id]}{data ? "，保留上次成功结果。" : ""}</div>}
-        {busy[id] && <div role="status"><p className="loading-copy">正在同步已发布研究、公司行情和最新证据…</p><div className="progress" /></div>}
-        {publication?.warning && <p className="publication-note" role="status">{publication.warning}</p>}
+        {errors[id] && <div className="error" role="alert">{t(errors[id])}{data ? t("，保留上次成功结果。") : ""}</div>}
+        {busy[id] && <div role="status"><p className="loading-copy">{t("正在同步已发布研究、公司行情和最新证据…")}</p><div className="progress" /></div>}
+        {publication?.warning && <p className="publication-note" role="status">{t(publication.warning)}</p>}
         {mode === "financial" && id === "policy" && <PolicyMap data={editorial.geography} sources={sourceMap} />}
         {mode !== "market" && <ResearchBrief id={id} section={mode} connected={connected} ask={followup} research={editorial} sources={sourceMap} publishedAt={snapshot?.publishedAt || researchDate} version={snapshot?.version} tracks={data?.tracks} />}
         {mode === "financial" && id === "ai" && <Scenario params={connected ? params : { capital: 100, roi: 15, margin: 24 }} setParams={setParams} disabled={!connected} />}
@@ -404,21 +397,23 @@ export function BoardApp({ rpc, ask, view = {} }) {
         <footer className="foot">
           <span>
             {data
-              ? `本次获取 ${time(data.requestedAt)} · 行情以各自交易时点为准`
-              : "研究内容静态预览 · 连接后按需更新"}
+              ? t("本次获取 {value0} · 行情以各自交易时点为准", { value0: formatTime(data.requestedAt, language) })
+              : t("研究内容静态预览 · 连接后按需更新")}
           </span>
           <a
-            href="https://zhicepilot.com"
+            href="https://www.facaidazi.com"
             target="_blank"
             rel="noopener noreferrer"
-          >
-            在财搭子继续投资研究 ↗
-          </a>
+          >{t("在财搭子继续投资研究 ↗")}</a>
         </footer>
       </main>
     </div>
   );
 }
+export function BoardApp(props) {
+  return <LanguageProvider><BoardContent {...props} /></LanguageProvider>;
+}
+
 export function apply(ctx) {
   const view = {};
   const props = {
@@ -444,7 +439,7 @@ export function apply(ctx) {
           name: "sidebar.panellist",
           id: "caidazi-boards",
           order: 5,
-          label: () => "财搭子看板",
+          label: () => "财搭子 · Caidazi",
         },
         BoardIcon,
       ),

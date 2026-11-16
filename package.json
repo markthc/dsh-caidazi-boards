@@ -1,6 +1,6 @@
 {
   "name": "@caidazi/dsh-boards",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "财搭子研究看板：存储、AI基建、PCB/CCL及美国政策与数据中心，接入财搭子 MCP。",
   "type": "module",
   "license": "MIT",

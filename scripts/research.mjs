@@ -1,6 +1,8 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { validateSnapshot, digest, bundledSnapshot } from '../src/publication.js';
+import { untranslatedStrings } from '../src/i18n.js';
+import english from '../src/locales/en.json' with { type: 'json' };
 const [command,...args]=process.argv.slice(2);
 if(command==='draft'){
   const [id,out]=args;
@@ -20,10 +22,14 @@ if(command==='draft'){
   if(!file||!version||reviewed!=='--reviewed')throw new Error('Usage: publish reviewed-snapshot.json YYYY-MM-DD.N --reviewed');
   const input=JSON.parse(await readFile(file,'utf8'));
   const s=validateSnapshot({...input.snapshot||input,version,publishedAt:new Date().toISOString()});
+  const missing = untranslatedStrings({ boards: s.boards, sources: s.sources });
+  if (missing.length) throw new Error(`Add English translations in src/locales/en.json for ${missing.length} research strings before publishing. First missing string: ${missing[0]}`);
   const text=JSON.stringify(s,null,2)+'\n',dir=new URL('../research/',import.meta.url),path=`snapshots/${version}.json`;
   try{const prev=JSON.parse(await readFile(new URL('latest-v2.json',dir),'utf8'));if(version.localeCompare(prev.version,undefined,{numeric:true})<=0)throw new Error('Publication version must increase');}catch(e){if(e.code!=='ENOENT')throw e}
   await mkdir(new URL('snapshots/',dir),{recursive:true});
   await writeFile(new URL(path,dir),text,{flag:'wx'});
+  await mkdir(new URL('locales/',dir),{recursive:true});
+  await writeFile(new URL('locales/en.json',dir),JSON.stringify({schemaVersion:1,researchVersion:version,sourceSha256:digest(text),messages:english},null,2)+'\n');
   await writeFile(new URL('latest-v2.json',dir),JSON.stringify({schemaVersion:2,version,path,sha256:digest(text)},null,2)+'\n');
   console.log('Prepared research/'+path+' and latest-v2.json. Review git diff, then commit/push to publish.');
 }else if(command==='seed'){
