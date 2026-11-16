@@ -123,4 +123,4 @@ npm pack
 
 仍需改进：完整产品价格与企业季度连续数据、行业横向覆盖、自动财报抽取核验、常驻事件/定时调度。公共快照是共享研究，尚不包含个人收藏/fork或账户定制。Yahoo接口无SLA，境内网络及数据授权需在产品化前确认；公司图表不能外推为行业整体。
 
-代码MIT；品牌商标仍归财搭子。公开包不含个人Key、账户、测试响应、研究库原件或机构报告全文。当前通过GitHub Release分发，未宣称进入npm或DSH官方广场。
+代码MIT；品牌商标仍归财搭子。公开包不含个人Key、账户、测试响应、研究库原件或机构报告全文。插件已在[1024 Store](https://deepseek1024.com/plugins/markthc/dsh-caidazi-boards)收录，可下载[GitHub Release安装包](https://github.com/markthc/dsh-caidazi-boards/releases/tag/v0.3.1)。Plugin Hub与Plugin Radar的收录申请正在处理中。
