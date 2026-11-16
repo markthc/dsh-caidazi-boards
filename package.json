@@ -1,6 +1,6 @@
 {
   "name": "@caidazi/dsh-boards",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "财搭子研究看板：存储、AI基建、PCB/CCL及美国政策与数据中心，接入财搭子 MCP。",
   "type": "module",
   "license": "MIT",
@@ -39,6 +39,20 @@
         "@deepseek-ai/dsh-client-ui-workspace",
         "@deepseek-ai/dsh-client-connection"
       ]
+    },
+    "catalog": {
+      "category": "tool",
+      "summary": {
+        "en": "Source-backed research boards for memory, AI infrastructure, PCB/CCL and US data-center policy, with Caidazi MCP market data and shared research updates.",
+        "zh": "财搭子研究看板，跟踪存储、AI基建、PCB/CCL与美国数据中心政策，接入财搭子MCP行情、资料和共享研究更新。"
+      },
+      "capabilities": [
+        "webserver",
+        "client",
+        "credentials",
+        "mcp",
+        "skills"
+      ]
     }
   },
   "scripts": {
@@ -51,5 +65,25 @@
   },
   "devDependencies": {
     "esbuild": "0.25.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markthc/dsh-caidazi-boards.git"
+  },
+  "homepage": "https://github.com/markthc/dsh-caidazi-boards#readme",
+  "bugs": {
+    "url": "https://github.com/markthc/dsh-caidazi-boards/issues"
+  },
+  "keywords": [
+    "dsh-plugin",
+    "deepseek-harness",
+    "caidazi",
+    "investment-research",
+    "finance",
+    "dashboard"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

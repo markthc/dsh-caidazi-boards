@@ -2,20 +2,22 @@
 
 四张可更新的研究看板：**存储价格与利润、AI 基建成本与回报、PCB／CCL 升级兑现、美国政策与数据中心**。复用财搭子 Logo、大发头像与白蓝界面，通过财搭子 MCP 获取行情和证据，在 DSH 原生会话继续研究。
 
+![美国政策与数据中心看板](https://raw.githubusercontent.com/markthc/dsh-caidazi-boards/main/docs/policy-board.png)
+
 ## 安装与使用
 
-v0.3.0 支持 **DSH 0.2.2-rc.1 / rc.2**，不需要 `allow-version`。命令行版需要 Node.js 24.9.0+；官方 Desktop 使用自带运行环境。
+v0.3.1 支持 **DSH 0.2.2-rc.1 / rc.2**，不需要 `allow-version`。命令行版需要 Node.js 24.9.0+；官方 Desktop 使用自带运行环境。
 
 Desktop 在 Plugins 中安装以下 URL，然后重新打开财搭子看板；若仍显示旧版，重启 DSH：
 
 ```text
-https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.0/caidazi-dsh-boards-0.3.0.tgz
+https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.1/caidazi-dsh-boards-0.3.1.tgz
 ```
 
 Web：
 
 ```sh
-dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.0/caidazi-dsh-boards-0.3.0.tgz
+dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.1/caidazi-dsh-boards-0.3.1.tgz
 dsh web
 ```
 
