@@ -16,25 +16,26 @@ The language menu supports System, 简体中文 and English. System follows the 
 
 v0.3.2 支持 **DSH 0.2.2-rc.1 / rc.2**，不需要 `allow-version`。命令行版需要 Node.js 24.9.0+；官方 Desktop 使用自带运行环境。
 
-Desktop 在 Plugins 中安装以下 URL，然后重新打开财搭子看板；若仍显示旧版，重启 DSH：
+Desktop 打开 **Plugins → Add plugin**，输入包名，选择 Official npm registry，安装后点击 Enable now。
 
 ```text
-https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.2/caidazi-dsh-boards-0.3.2.tgz
+@caidazi/dsh-boards
 ```
 
-Web 可从 npm 安装：
+Web 从 npm 安装。
 
 ```sh
-dsh plugin --profile web add @caidazi/dsh-boards@0.3.2
+dsh plugin --profile web add @caidazi/dsh-boards
 dsh web
 ```
 
-也可使用 GitHub Release 安装包：
+### 更新研究与升级功能
 
-```sh
-dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.2/caidazi-dsh-boards-0.3.2.tgz
-dsh web
-```
+- 研究与行情在看板内点击「更新看板」，结果显示公共研究版本及「本版变化」。已有最新研究时判断可以保持一致。
+- 中英切换等新功能随插件版本发布。Desktop 打开 **Plugins → @caidazi/dsh-boards → Versions → Check again** 检查版本，有新版时按该页提示升级。
+- 之前使用固定版本的 GitHub `.tgz` 地址安装的用户，需要迁移一次。先在插件详情卸载，再按上方包名安装并启用。本机从 v0.3.0 迁移到 v0.3.2 已验证原 Key 继续可用，历史会话保留。该次迁移后插件详情具备 Versions 检查入口。
+
+需要指定归档时，可从 [GitHub Release](https://github.com/markthc/dsh-caidazi-boards/releases/tag/v0.3.2) 获取安装包。
 
 1. 打开侧栏「财搭子看板」。无 Key 时仅显示内置研究及静态测算，不请求行情或公共快照。
 2. 连接财搭子：App → 大发 → 左侧菜单 → 我的skill → 领取 API Key／我的API KEY管理。实际行情验证成功后保存至 DSH 凭据区，不进入聊天、URL或公共仓库。
