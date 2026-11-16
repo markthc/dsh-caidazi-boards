@@ -14,7 +14,14 @@ Desktop 在 Plugins 中安装以下 URL，然后重新打开财搭子看板；�
 https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.1/caidazi-dsh-boards-0.3.1.tgz
 ```
 
-Web：
+Web 可从 npm 安装：
+
+```sh
+dsh plugin --profile web add @caidazi/dsh-boards@0.3.1
+dsh web
+```
+
+也可使用 GitHub Release 安装包：
 
 ```sh
 dsh plugin --profile web add https://github.com/markthc/dsh-caidazi-boards/releases/download/v0.3.1/caidazi-dsh-boards-0.3.1.tgz
